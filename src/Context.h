@@ -2,10 +2,11 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "AudioPlayer.h"
 #include "ResourceManagers.h"
 
+class AudioPlayer;
 class StateMachine;
+class SettingsManager;
 
 struct Context
 {
@@ -16,6 +17,16 @@ struct Context
     FontManager& fonts;
     MusicManager& music;
     SoundBufferManager& soundBuffers;
-
+    SettingsManager& settings;
     AudioPlayer& audioPlayer;
+
+    Context(
+        StateMachine& stateMachine,
+        sf::RenderWindow& window,
+        FontManager& fonts,
+        MusicManager& music,
+        SoundBufferManager& soundBuffers,
+        AudioPlayer& audioPlayer,
+        SettingsManager& settings
+    );
 };

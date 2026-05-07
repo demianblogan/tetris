@@ -1,5 +1,7 @@
 #include "AudioPlayer.h"
 
+#include <algorithm>
+
 AudioPlayer::AudioPlayer(SoundBufferManager& soundBuffers)
 	: soundBuffers(soundBuffers)
 {
@@ -9,7 +11,10 @@ AudioPlayer::AudioPlayer(SoundBufferManager& soundBuffers)
 void AudioPlayer::Play(Assets::SoundID soundID)
 {
 	activeSounds.emplace_back(soundID, soundBuffers.Get(soundID));
-	activeSounds.back().sound.play();
+
+	ActiveSound& activeSound = activeSounds.back();
+	activeSound.sound.setVolume(globalVolume);
+	activeSound.sound.play();
 }
 
 void AudioPlayer::Restart(Assets::SoundID soundID)
@@ -19,6 +24,7 @@ void AudioPlayer::Restart(Assets::SoundID soundID)
 		if (activeSound.id == soundID)
 		{
 			activeSound.sound.stop();
+			activeSound.sound.setPlayingOffset(sf::Time::Zero);
 			activeSound.sound.play();
 			return;
 		}
@@ -31,12 +37,22 @@ void AudioPlayer::RemoveStoppedSounds()
 {
 	activeSounds.erase(
 		std::remove_if(
-			activeSounds.begin(),
-			activeSounds.end(),
+			activeSounds.begin(), activeSounds.end(),
 			[](const ActiveSound& activeSound)
 			{
 				return activeSound.sound.getStatus() == sf::Sound::Status::Stopped;
-			}),
+			}
+		),
 		activeSounds.end()
 	);
+}
+
+void AudioPlayer::SetGlobalVolume(float volume)
+{
+	globalVolume = volume;
+
+	for (ActiveSound& activeSound : activeSounds)
+	{
+		activeSound.sound.setVolume(globalVolume);
+	}
 }

@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "AudioPlayer.h"
 #include "StateMachine.h"
 #include "StatisticsState.h"
 
@@ -47,8 +48,10 @@ MainMenuState::MainMenuState(Context& context)
 	sf::Music& music = context.music.Get(Assets::MusicID::MainMenu);
 
 	music.setLooping(true);
-	music.setVolume(50.f);
-	music.play();
+	if (music.getStatus() != sf::Music::Status::Playing)
+	{
+		music.play();
+	}
 }
 
 void MainMenuState::ProcessEvents(sf::RenderWindow& window)

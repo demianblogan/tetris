@@ -43,5 +43,6 @@ namespace Data
 	namespace Paths
 	{
 		inline constexpr const char* Scores = "data/scores.txt";
+		inline constexpr const char* Settings = "data/settings.txt";
 	}
 }

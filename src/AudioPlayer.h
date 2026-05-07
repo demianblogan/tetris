@@ -12,7 +12,7 @@ struct ActiveSound
 	sf::Sound sound;
 
 	ActiveSound(Assets::SoundID id, const sf::SoundBuffer& buffer)
-		:id(id), sound(buffer)
+		: id(id), sound(buffer)
 	{
 		// No code
 	}
@@ -23,6 +23,7 @@ class AudioPlayer
 private:
 	SoundBufferManager& soundBuffers;
 	std::vector<ActiveSound> activeSounds;
+	float globalVolume = 100.f;
 
 public:
 	AudioPlayer(SoundBufferManager& soundBuffers);
@@ -30,4 +31,5 @@ public:
 	void Play(Assets::SoundID soundID);
 	void Restart(Assets::SoundID soundID);
 	void RemoveStoppedSounds();
+	void SetGlobalVolume(float volume);
 };

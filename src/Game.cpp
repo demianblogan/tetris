@@ -41,10 +41,10 @@ Game::Game()
 	: window(sf::VideoMode::getDesktopMode(), "Tetris", sf::State::Fullscreen)
 	, gameView({ VIRTUAL_RESOLUTION / 2.f, VIRTUAL_RESOLUTION })
 	, audioPlayer(soundBuffers)
-	, context(stateMachine, window, fonts, music, soundBuffers, audioPlayer)
+	, settings(Data::Paths::Settings)
+	, context(stateMachine, window, fonts, music, soundBuffers, audioPlayer, settings)
 {
 	window.setView(gameView);
-	window.setVerticalSyncEnabled(true);
 
 	fonts.Load(Assets::FontID::Main, Assets::Paths::Fonts::Main);
 
@@ -52,6 +52,9 @@ Game::Game()
 
 	soundBuffers.Load(Assets::SoundID::MenuItemSelected, Assets::Paths::Sounds::MenuItemSelected);
 	soundBuffers.Load(Assets::SoundID::MenuItemPressed, Assets::Paths::Sounds::MenuItemPressed);
+
+	settings.Load();
+	settings.Apply(context);
 
 	stateMachine.PushState(std::make_unique<MainMenuState>(context));
 }

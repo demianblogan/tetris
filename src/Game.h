@@ -6,6 +6,7 @@
 #include "Context.h"
 #include "ResourceManager.h"
 #include "StateMachine.h"
+#include "SettingsManager.h"
 
 class Game
 {
@@ -20,7 +21,7 @@ private:
 	FontManager fonts;
 	MusicManager music;
 	SoundBufferManager soundBuffers;
-
+	SettingsManager settings;
 	AudioPlayer audioPlayer;
 
 	Context context;
