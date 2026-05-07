@@ -144,9 +144,12 @@
     <ClCompile Include="src\AudioPlayer.cpp" />
     <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\HighScoreManager.cpp" />
     <ClCompile Include="src\Label.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainMenuState.cpp" />
+    <ClCompile Include="src\StateMachine.cpp" />
+    <ClCompile Include="src\StatisticsState.cpp" />
     <ClCompile Include="src\VerticalMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -155,12 +158,16 @@
     <ClInclude Include="src\Button.h" />
     <ClInclude Include="src\Context.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\HighScoreEntry.h" />
+    <ClInclude Include="src\HighScoreManager.h" />
     <ClInclude Include="src\Label.h" />
     <ClInclude Include="src\MainMenuState.h" />
     <ClInclude Include="src\MenuAction.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\ResourceManagers.h" />
     <ClInclude Include="src\State.h" />
+    <ClInclude Include="src\StateMachine.h" />
+    <ClInclude Include="src\StatisticsState.h" />
     <ClInclude Include="src\VerticalMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

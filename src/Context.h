@@ -5,8 +5,12 @@
 #include "AudioPlayer.h"
 #include "ResourceManagers.h"
 
+class StateMachine;
+
 struct Context
 {
+    StateMachine& stateMachine;
+
     sf::RenderWindow& window;
 
     FontManager& fonts;

@@ -37,3 +37,11 @@ namespace Assets
 		}
 	}
 }
+
+namespace Data
+{
+	namespace Paths
+	{
+		inline constexpr const char* Scores = "data/scores.txt";
+	}
+}

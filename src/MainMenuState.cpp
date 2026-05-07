@@ -4,6 +4,9 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
+#include "StateMachine.h"
+#include "StatisticsState.h"
+
 namespace
 {
 	void CenterTextHorizontally(sf::Text& text, float windowWidth)
@@ -83,19 +86,19 @@ void MainMenuState::ProcessEvents(sf::RenderWindow& window)
 				{
 				case MainMenuAction::StartGame:
 					// TODO: Start Game
-					break;				
+					break;
 
 				case MainMenuAction::Options:
 					// TODO: Options			
-					break;				
+					break;
 
 				case MainMenuAction::Statistics:
-					// TODO: Statistics			
-					break;				
+					context.stateMachine.ChangeState(std::make_unique<StatisticsState>(context));
+					break;
 
-				case MainMenuAction::Exit:				
+				case MainMenuAction::Exit:
 					window.close();
-					break;				
+					break;
 				}
 
 				break;
@@ -109,18 +112,19 @@ void MainMenuState::ProcessEvents(sf::RenderWindow& window)
 
 				switch (menu.GetSelectedAction())
 				{
-				case MainMenuAction::StartGame:				
-					break;				
+				case MainMenuAction::StartGame:
+					break;
 
-				case MainMenuAction::Options:				
-					break;				
+				case MainMenuAction::Options:
+					break;
 
-				case MainMenuAction::Statistics:				
-					break;				
+				case MainMenuAction::Statistics:
+					context.stateMachine.ChangeState(std::make_unique<StatisticsState>(context));
+					break;
 
-				case MainMenuAction::Exit:				
+				case MainMenuAction::Exit:
 					window.close();
-					break;				
+					break;
 				}
 			}
 		}

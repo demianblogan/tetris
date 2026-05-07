@@ -9,12 +9,18 @@ bool Game::IsWindowOpen() const
 
 void Game::ProcessEvents()
 {
-	currentState->ProcessEvents(window);
+	if (State* currentState = stateMachine.GetCurrentState())
+	{
+		currentState->ProcessEvents(window);
+	}
 }
 
 void Game::Update(float deltaTime)
 {
-	currentState->Update(deltaTime);
+	if (State* currentState = stateMachine.GetCurrentState())
+	{
+		currentState->Update(deltaTime);
+	}
 }
 
 void Game::Render()
@@ -23,7 +29,10 @@ void Game::Render()
 
 	window.setView(gameView);
 
-	currentState->Render(window);
+	if (State* currentState = stateMachine.GetCurrentState())
+	{
+		currentState->Render(window);
+	}
 
 	window.display();
 }
@@ -32,7 +41,7 @@ Game::Game()
 	: window(sf::VideoMode::getDesktopMode(), "Tetris", sf::State::Fullscreen)
 	, gameView({ VIRTUAL_RESOLUTION / 2.f, VIRTUAL_RESOLUTION })
 	, audioPlayer(soundBuffers)
-	, context(window, fonts, music, soundBuffers, audioPlayer)
+	, context(stateMachine, window, fonts, music, soundBuffers, audioPlayer)
 {
 	window.setView(gameView);
 	window.setVerticalSyncEnabled(true);
@@ -44,7 +53,7 @@ Game::Game()
 	soundBuffers.Load(Assets::SoundID::MenuItemSelected, Assets::Paths::Sounds::MenuItemSelected);
 	soundBuffers.Load(Assets::SoundID::MenuItemPressed, Assets::Paths::Sounds::MenuItemPressed);
 
-	currentState = std::make_unique<MainMenuState>(context);
+	stateMachine.PushState(std::make_unique<MainMenuState>(context));
 }
 
 void Game::Run()
@@ -56,7 +65,11 @@ void Game::Run()
 		float deltaTime = deltaTimeClock.reset().asSeconds();
 
 		ProcessEvents();
+		stateMachine.ApplyPendingChanges();
+
 		Update(deltaTime);
+		stateMachine.ApplyPendingChanges();
+
 		Render();
 
 		audioPlayer.RemoveStoppedSounds();

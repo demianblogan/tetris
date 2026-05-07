@@ -5,7 +5,7 @@
 #include "AudioPlayer.h"
 #include "Context.h"
 #include "ResourceManager.h"
-#include "State.h"
+#include "StateMachine.h"
 
 class Game
 {
@@ -15,7 +15,7 @@ private:
 	sf::RenderWindow window;
 	sf::View gameView;
 
-	std::unique_ptr<State> currentState;
+	StateMachine stateMachine;
 
 	FontManager fonts;
 	MusicManager music;
