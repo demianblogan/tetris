@@ -20,6 +20,5 @@ public:
 
     void ApplyPendingChanges();
 
-    [[nodiscard]]
-    State* GetCurrentState();
+    [[nodiscard]] State* GetCurrentState();
 };

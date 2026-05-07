@@ -2,8 +2,8 @@
 
 #include <fstream>
 
-#include "AudioPlayer.h"
-#include "Context.h"
+#include "../audio/AudioPlayer.h"
+#include "../core/Context.h"
 
 SettingsManager::SettingsManager(const std::filesystem::path& filepath)
 	: filepath(filepath)

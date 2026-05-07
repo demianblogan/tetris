@@ -1,7 +1,7 @@
 #include "Context.h"
 
-#include "AudioPlayer.h"
-#include "SettingsManager.h"
+#include "../audio/AudioPlayer.h"
+#include "../settings/SettingsManager.h"
 
 Context::Context(
     StateMachine& stateMachine,

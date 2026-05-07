@@ -113,7 +113,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs\SFML\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs\SFML\include;$(ProjectDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +131,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp23</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)libs\SFML\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)libs\SFML\include;$(ProjectDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,38 +141,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\AudioPlayer.cpp" />
-    <ClCompile Include="src\Button.cpp" />
-    <ClCompile Include="src\Context.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\HighScoreManager.cpp" />
-    <ClCompile Include="src\Label.cpp" />
+    <ClCompile Include="src\audio\AudioPlayer.cpp" />
+    <ClCompile Include="src\states\SettingsState.cpp" />
+    <ClCompile Include="src\core\Context.cpp" />
+    <ClCompile Include="src\core\Game.cpp" />
+    <ClCompile Include="src\statistics\HighScoreManager.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\MainMenuState.cpp" />
-    <ClCompile Include="src\SettingsManager.cpp" />
-    <ClCompile Include="src\StateMachine.cpp" />
-    <ClCompile Include="src\StatisticsState.cpp" />
-    <ClCompile Include="src\VerticalMenu.cpp" />
+    <ClCompile Include="src\states\MainMenuState.cpp" />
+    <ClCompile Include="src\settings\SettingsManager.cpp" />
+    <ClCompile Include="src\core\StateMachine.cpp" />
+    <ClCompile Include="src\states\StatisticsState.cpp" />
+    <ClCompile Include="src\ui\UIButton.cpp" />
+    <ClCompile Include="src\ui\UILabel.cpp" />
+    <ClCompile Include="src\ui\UILayout.cpp" />
+    <ClCompile Include="src\ui\UISlider.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Assets.h" />
-    <ClInclude Include="src\AudioPlayer.h" />
-    <ClInclude Include="src\Button.h" />
-    <ClInclude Include="src\Context.h" />
-    <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\GameSettings.h" />
-    <ClInclude Include="src\HighScoreEntry.h" />
-    <ClInclude Include="src\HighScoreManager.h" />
-    <ClInclude Include="src\Label.h" />
-    <ClInclude Include="src\MainMenuState.h" />
-    <ClInclude Include="src\MenuAction.h" />
-    <ClInclude Include="src\ResourceManager.h" />
-    <ClInclude Include="src\ResourceManagers.h" />
-    <ClInclude Include="src\SettingsManager.h" />
-    <ClInclude Include="src\State.h" />
-    <ClInclude Include="src\StateMachine.h" />
-    <ClInclude Include="src\StatisticsState.h" />
-    <ClInclude Include="src\VerticalMenu.h" />
+    <ClInclude Include="src\resources\Assets.h" />
+    <ClInclude Include="src\audio\AudioPlayer.h" />
+    <ClInclude Include="src\states\SettingsState.h" />
+    <ClInclude Include="src\core\Context.h" />
+    <ClInclude Include="src\core\Game.h" />
+    <ClInclude Include="src\settings\GameSettings.h" />
+    <ClInclude Include="src\statistics\HighScoreEntry.h" />
+    <ClInclude Include="src\statistics\HighScoreManager.h" />
+    <ClInclude Include="src\ui\UIButton.h" />
+    <ClInclude Include="src\ui\UIElement.h" />
+    <ClInclude Include="src\states\MainMenuState.h" />
+    <ClInclude Include="src\resources\ResourceManager.h" />
+    <ClInclude Include="src\resources\ResourceManagers.h" />
+    <ClInclude Include="src\settings\SettingsManager.h" />
+    <ClInclude Include="src\core\State.h" />
+    <ClInclude Include="src\core\StateMachine.h" />
+    <ClInclude Include="src\states\StatisticsState.h" />
+    <ClInclude Include="src\ui\UILabel.h" />
+    <ClInclude Include="src\ui\UILayout.h" />
+    <ClInclude Include="src\ui\UISlider.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

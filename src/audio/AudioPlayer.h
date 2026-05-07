@@ -1,10 +1,8 @@
 #pragma once
 
 #include <vector>
-
 #include <SFML/Audio/Sound.hpp>
-
-#include "ResourceManagers.h"
+#include "../resources/ResourceManagers.h"
 
 struct ActiveSound
 {

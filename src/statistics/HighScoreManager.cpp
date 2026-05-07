@@ -1,7 +1,7 @@
 #include "HighScoreManager.h"
 
-#include <fstream>
 #include <algorithm>
+#include <fstream>
 
 HighScoreManager::HighScoreManager(const std::filesystem::path& filepath)
     : filepath(filepath)

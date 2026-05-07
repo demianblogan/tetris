@@ -1,8 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
-
-#include "ResourceManagers.h"
+#include "../resources/ResourceManagers.h"
 
 class AudioPlayer;
 class StateMachine;

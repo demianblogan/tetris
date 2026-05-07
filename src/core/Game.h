@@ -2,11 +2,11 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "AudioPlayer.h"
+#include "../audio/AudioPlayer.h"
+#include "../resources/ResourceManager.h"
+#include "../settings/SettingsManager.h"
 #include "Context.h"
-#include "ResourceManager.h"
 #include "StateMachine.h"
-#include "SettingsManager.h"
 
 class Game
 {

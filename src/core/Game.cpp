@@ -1,6 +1,6 @@
 #include "Game.h"
 
-#include "MainMenuState.h"
+#include <states/MainMenuState.h>
 
 bool Game::IsWindowOpen() const
 {

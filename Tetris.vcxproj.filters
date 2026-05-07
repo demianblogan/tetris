@@ -18,93 +18,105 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game.cpp">
+    <ClCompile Include="src\core\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MainMenuState.cpp">
+    <ClCompile Include="src\states\MainMenuState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Label.cpp">
+    <ClCompile Include="src\audio\AudioPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Button.cpp">
+    <ClCompile Include="src\statistics\HighScoreManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\VerticalMenu.cpp">
+    <ClCompile Include="src\core\StateMachine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\AudioPlayer.cpp">
+    <ClCompile Include="src\states\StatisticsState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\HighScoreManager.cpp">
+    <ClCompile Include="src\settings\SettingsManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\StateMachine.cpp">
+    <ClCompile Include="src\core\Context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\StatisticsState.cpp">
+    <ClCompile Include="src\states\SettingsState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SettingsManager.cpp">
+    <ClCompile Include="src\ui\UILayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Context.cpp">
+    <ClCompile Include="src\ui\UILabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\UIButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\UISlider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Game.h">
+    <ClInclude Include="src\core\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\State.h">
+    <ClInclude Include="src\core\State.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MainMenuState.h">
+    <ClInclude Include="src\states\MainMenuState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ResourceManager.h">
+    <ClInclude Include="src\resources\ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Assets.h">
+    <ClInclude Include="src\resources\Assets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ResourceManagers.h">
+    <ClInclude Include="src\resources\ResourceManagers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Context.h">
+    <ClInclude Include="src\core\Context.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Label.h">
+    <ClInclude Include="src\audio\AudioPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Button.h">
+    <ClInclude Include="src\statistics\HighScoreEntry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\VerticalMenu.h">
+    <ClInclude Include="src\statistics\HighScoreManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MenuAction.h">
+    <ClInclude Include="src\core\StateMachine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\AudioPlayer.h">
+    <ClInclude Include="src\states\StatisticsState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\HighScoreEntry.h">
+    <ClInclude Include="src\settings\GameSettings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\HighScoreManager.h">
+    <ClInclude Include="src\settings\SettingsManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\StateMachine.h">
+    <ClInclude Include="src\states\SettingsState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\StatisticsState.h">
+    <ClInclude Include="src\ui\UIElement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameSettings.h">
+    <ClInclude Include="src\ui\UILayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\SettingsManager.h">
+    <ClInclude Include="src\ui\UILabel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\UIButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\UISlider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
