@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "../resources/ResourceManagers.h"
+#include "../resources/ResourceManager.h"
 
 class AudioPlayer;
 class StateMachine;
@@ -16,6 +16,7 @@ struct Context
     FontManager& fonts;
     MusicManager& music;
     SoundBufferManager& soundBuffers;
+    TextureManager& textures;
     SettingsManager& settings;
     AudioPlayer& audioPlayer;
 
@@ -25,6 +26,7 @@ struct Context
         FontManager& fonts,
         MusicManager& music,
         SoundBufferManager& soundBuffers,
+        TextureManager& textures,
         AudioPlayer& audioPlayer,
         SettingsManager& settings
     );

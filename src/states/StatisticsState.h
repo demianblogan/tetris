@@ -1,33 +1,29 @@
 #pragma once
 
 #include <array>
-
 #include "../core/Context.h"
 #include "../core/State.h"
 #include "../statistics/HighScoreManager.h"
-#include "../ui/UILabel.h"
-#include "../ui/UILayout.h"
+#include "../ui/Layout.h"
+#include "../ui/Label.h"
+#include "../ui/Spacer.h"
 
-class StatisticsState : public State
+class StatisticsState final : public State
 {
 private:
-    Context& context;
-    HighScoreManager highScoreManager;
+	Context& context;
 
-    UILabel titleLabel;
-    UILayout scoresLayout;
+	HighScoreManager highScoreManager;
+	UI::Layout rootLayout;
+	std::array<UI::Label*, HighScoreManager::MAX_RECORDS> scoreLabels{};
 
-    std::array<UILabel*, HighScoreManager::MAX_RECORDS> scoreLabels;
-
-    UILabel escapeLabel;
-    UILabel deleteLabel;
-
-    void UpdateScoreLabels();
+	void UpdateScoreLabels();
+	void UpdateLayout();
 
 public:
-    StatisticsState(Context& context);
+	explicit StatisticsState(Context& context);
 
-    void ProcessEvents(sf::RenderWindow& window) override;
-    void Update(float deltaTime) override;
-    void Render(sf::RenderWindow& window) override;
+	void ProcessEvents(sf::RenderWindow& window) override;
+	void Update(float deltaTime) override;
+	void Render(sf::RenderWindow& window) override;
 };

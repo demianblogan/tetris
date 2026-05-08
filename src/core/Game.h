@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
-
 #include "../audio/AudioPlayer.h"
 #include "../resources/ResourceManager.h"
 #include "../settings/SettingsManager.h"
@@ -21,6 +20,7 @@ private:
 	FontManager fonts;
 	MusicManager music;
 	SoundBufferManager soundBuffers;
+	TextureManager textures;
 	SettingsManager settings;
 	AudioPlayer audioPlayer;
 

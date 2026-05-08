@@ -1,7 +1,6 @@
 #include "SettingsManager.h"
 
 #include <fstream>
-
 #include "../audio/AudioPlayer.h"
 #include "../core/Context.h"
 

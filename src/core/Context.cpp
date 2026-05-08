@@ -9,6 +9,7 @@ Context::Context(
     FontManager& fonts,
     MusicManager& music,
     SoundBufferManager& soundBuffers,
+    TextureManager& textures,
     AudioPlayer& audioPlayer,
     SettingsManager& settings
 )
@@ -17,6 +18,7 @@ Context::Context(
     , fonts(fonts)
     , music(music)
     , soundBuffers(soundBuffers)
+    , textures(textures)
     , audioPlayer(audioPlayer)
     , settings(settings)
 {

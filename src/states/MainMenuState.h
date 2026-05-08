@@ -1,50 +1,51 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include "../core/Context.h"
 #include "../core/State.h"
-#include "../ui/UIButton.h"
-#include "../ui/UILabel.h"
-#include "../ui/UILayout.h"
+#include "../ui/Button.h"
+#include "../ui/Layout.h"
+#include "../ui/Label.h"
+#include "../ui/Spacer.h"
 
-class MainMenuState : public State
+class MainMenuState final : public State
 {
 private:
-    enum class MenuAction
-    {
-        StartGame,
-        Options,
-        Statistics,
-        Exit
-    };
+	enum class MenuAction
+	{
+		StartGame,
+		Options,
+		Statistics,
+		Exit
+	};
 
-    struct MenuButton
-    {
-        UIButton* button;
-        MenuAction action;
-    };
+	struct MenuButton
+	{
+		UI::Button* button = nullptr;
+		MenuAction action;
+	};
 
-    Context& context;
+	Context& context;
+	UI::Layout rootLayout;
+	UI::Layout* menuLayout = nullptr;
+	std::vector<MenuButton> buttons;
+	int selectedIndex = 0;
 
-    UILabel titleLabel;
-    UILayout menuLayout;
+	void CreateMenuButton(const sf::String& text, MenuAction action);
 
-    std::vector<MenuButton> buttons;
+	void SelectPreviousMenuItem();
+	void SelectNextMenuItem();
 
-    int selectedIndex = 0;
+	void UpdateSelection();
+	void ActivateSelectedButton();
+	void UpdateLayout();
 
 public:
-    MainMenuState(Context& context);
+	explicit MainMenuState(Context& context);
 
-    void ProcessEvents(sf::RenderWindow& window) override;
-    void Update(float deltaTime) override;
-    void Render(sf::RenderWindow& window) override;
+	void ProcessEvents(sf::RenderWindow& window) override;
+	void Update(float deltaTime) override;
 
-private:
-    void SelectPreviousMenuItem();
-    void SelectNextMenuItem();
-
-    void UpdateSelection();
-
-    void ActivateSelectedButton();
+	void Render(sf::RenderWindow& window) override;
 };

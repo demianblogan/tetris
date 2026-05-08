@@ -1,62 +1,133 @@
+
 #include "StatisticsState.h"
 
 #include <optional>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "../core/StateMachine.h"
+#include "../resources/Assets.h"
 #include "MainMenuState.h"
+
+namespace
+{
+	constexpr float TopSpacing = 80.f;
+	constexpr float RootGap = 100.f;
+	constexpr float ScoresGap = 30.f;
+	constexpr float FooterGap = 20.f;
+	constexpr float FooterSpacing = 40.f;
+	constexpr unsigned int TitleSize = 120;
+	constexpr unsigned int ScoreSize = 70;
+	constexpr unsigned int FooterSize = 50;
+}
 
 StatisticsState::StatisticsState(Context& context)
 	: context(context)
 	, highScoreManager(Data::Paths::Scores)
-	, titleLabel(context.fonts.Get(Assets::FontID::Main), "TOP-" + std::to_string(HighScoreManager::MAX_RECORDS) + " best players", 120)
-	, scoresLayout(UILayout::Orientation::Vertical)
-	, escapeLabel(context.fonts.Get(Assets::FontID::Main), "ESC - return to main menu", 50)
-	, deleteLabel(context.fonts.Get(Assets::FontID::Main), "DEL - delete all records", 50)
+	, rootLayout(UI::Layout::Orientation::Vertical)
 {
 	highScoreManager.Load();
 
-	const float windowWidth = context.window.getView().getSize().x;
+	rootLayout.SetHorizontalAlignment(UI::Layout::Alignment::Center);
+	rootLayout.SetVerticalAlignment(UI::Layout::Alignment::Start);
+	rootLayout.SetGap(RootGap);
 
-	// =========================
+	rootLayout.Add(std::make_unique<UI::Spacer>(sf::Vector2f{ 0.f, TopSpacing }));
+
+	// =====================================================
 	// Title
-	// =========================
-
-	titleLabel.SetPosition({ 0.f, 150.f });
-	titleLabel.CenterHorizontally(windowWidth);
-
-	// =========================
-	// Scores layout
-	// =========================
-
-	scoresLayout.SetGap(30.f);
-
-	for (std::size_t i = 0; i < HighScoreManager::MAX_RECORDS; i++)
+	// =====================================================
 	{
-		auto label = std::make_unique<UILabel>(context.fonts.Get(Assets::FontID::Main), "...", 70);
-		scoreLabels[i] = label.get();
-		scoresLayout.Add(std::move(label));
+		auto title = std::make_unique<UI::Label>(
+			context.fonts.Get(Assets::FontID::Main),
+			"TOP-" + std::to_string(HighScoreManager::MAX_RECORDS) + " BEST PLAYERS",
+			TitleSize
+		);
+
+		title->SetFillColor(sf::Color::White);
+
+		rootLayout.Add(std::move(title));
+	}
+
+	// =====================================================
+	// Scores layout
+	// =====================================================
+	{
+		auto scoresLayout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
+
+		scoresLayout->SetGap(ScoresGap);
+		scoresLayout->SetHorizontalAlignment(UI::Layout::Alignment::Center);
+
+		for (std::size_t i = 0; i < HighScoreManager::MAX_RECORDS; i++)
+		{
+			auto label = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main),
+				"...",
+				ScoreSize
+			);
+
+			label->SetFillColor(sf::Color::White);
+			scoreLabels[i] = label.get();
+
+			scoresLayout->Add(std::move(label));
+		}
+
+		rootLayout.Add(std::move(scoresLayout));
 	}
 
 	UpdateScoreLabels();
 
-	const float layoutWidth = scoresLayout.GetSize().x;
-	scoresLayout.SetPosition({ (windowWidth - layoutWidth) / 2.f, 350.f });
+	// =====================================================
+	// Spacer between scores and footer
+	// =====================================================
 
-	// =========================
-	// Bottom labels
-	// =========================
+	rootLayout.Add(std::make_unique<UI::Spacer>(sf::Vector2f{ 0.f, FooterSpacing }));
 
-	escapeLabel.SetPosition({ 0.f, 900.f });
-	escapeLabel.CenterHorizontally(windowWidth);
-	deleteLabel.SetPosition({ 0.f, 970.f });
-	deleteLabel.CenterHorizontally(windowWidth);
+	// =====================================================
+	// Footer layout
+	// =====================================================
+	{
+		auto footerLayout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
+
+		footerLayout->SetGap(FooterGap);
+		footerLayout->SetHorizontalAlignment(UI::Layout::Alignment::Center);
+
+		// =================================================
+		// Escape
+		// =================================================
+		{
+			auto label = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main),
+				"ESC - RETURN TO MAIN MENU",
+				FooterSize
+			);
+
+			label->SetFillColor(sf::Color(180, 180, 180));
+
+			footerLayout->Add(std::move(label));
+		}
+
+		// =================================================
+		// Delete
+		// =================================================
+		{
+			auto label = std::make_unique<UI::Label>(
+				context.fonts.Get(Assets::FontID::Main),
+				"DEL - DELETE ALL RECORDS",
+				FooterSize
+			);
+
+			label->SetFillColor(sf::Color(180, 180, 180));
+
+			footerLayout->Add(std::move(label));
+		}
+
+		rootLayout.Add(std::move(footerLayout)
+		);
+	}
+
+	UpdateLayout();
 }
 
 void StatisticsState::UpdateScoreLabels()
 {
 	const std::vector<HighScoreEntry>& records = highScoreManager.GetRecords();
-
-	const float windowWidth = context.window.getView().getSize().x;
 
 	for (std::size_t i = 0; i < HighScoreManager::MAX_RECORDS; i++)
 	{
@@ -69,6 +140,14 @@ void StatisticsState::UpdateScoreLabels()
 			scoreLabels[i]->SetString(std::to_string(i + 1) + ". ...");
 		}
 	}
+
+	UpdateLayout();
+}
+
+void StatisticsState::UpdateLayout()
+{
+	const sf::Vector2f viewSize = context.window.getView().getSize();
+	rootLayout.Arrange({ 0.f, 0.f }, viewSize);
 }
 
 void StatisticsState::ProcessEvents(sf::RenderWindow& window)
@@ -78,6 +157,28 @@ void StatisticsState::ProcessEvents(sf::RenderWindow& window)
 		if (event->is<sf::Event::Closed>())
 		{
 			window.close();
+		}
+		else if (const auto* resized = event->getIf<sf::Event::Resized>())
+		{
+			sf::View view = window.getView();
+
+			view.setSize(
+				{
+					static_cast<float>(resized->size.x),
+					static_cast<float>(resized->size.y)
+				}
+			);
+
+			view.setCenter(
+				{
+					static_cast<float>(resized->size.x) / 2.f,
+					static_cast<float>(resized->size.y) / 2.f
+				}
+			);
+
+			window.setView(view);
+
+			UpdateLayout();
 		}
 		else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
 		{
@@ -104,8 +205,5 @@ void StatisticsState::Update(float deltaTime)
 
 void StatisticsState::Render(sf::RenderWindow& window)
 {
-	titleLabel.Render(window);
-	scoresLayout.Render(window);
-	escapeLabel.Render(window);
-	deleteLabel.Render(window);
+	rootLayout.Render(window);
 }

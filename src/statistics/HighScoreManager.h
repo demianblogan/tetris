@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <filesystem>
-
 #include "HighScoreEntry.h"
 
 class HighScoreManager
@@ -18,9 +17,7 @@ public:
 
 	void Load();
 	void Save() const;
-
 	void AddRecord(const HighScoreEntry& entry);
-
 	void Clear();
 
 	[[nodiscard]] const std::vector<HighScoreEntry>& GetRecords() const;

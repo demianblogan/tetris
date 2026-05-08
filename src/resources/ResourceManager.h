@@ -3,12 +3,10 @@
 #include <unordered_map>
 #include <filesystem>
 #include <stdexcept>
-
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
-
 #include "Assets.h"
 
 template <typename Resource, typename Identifier>
@@ -66,3 +64,8 @@ public:
 		return resources.at(id);
 	}
 };
+
+using FontManager = ResourceManager<sf::Font, Assets::FontID>;
+using MusicManager = ResourceManager<sf::Music, Assets::MusicID>;
+using SoundBufferManager = ResourceManager<sf::SoundBuffer, Assets::SoundID>;
+using TextureManager = ResourceManager<sf::Texture, Assets::TextureID>;

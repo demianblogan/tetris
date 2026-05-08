@@ -14,14 +14,12 @@ void HighScoreManager::Load()
     records.clear();
 
     std::ifstream file(filepath);
-
     if (!file.is_open())
     {
         return;
     }
 
     HighScoreEntry entry;
-
     while (file >> entry.playerName >> entry.score)
     {
         records.push_back(entry);

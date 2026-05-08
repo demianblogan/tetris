@@ -45,16 +45,22 @@
     <ClCompile Include="src\states\SettingsState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\UILayout.cpp">
+    <ClCompile Include="src\ui\Layout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\UILabel.cpp">
+    <ClCompile Include="src\ui\Label.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\UIButton.cpp">
+    <ClCompile Include="src\ui\Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ui\UISlider.cpp">
+    <ClCompile Include="src\ui\Slider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Element.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ui\Spacer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -72,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\resources\Assets.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\resources\ResourceManagers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\core\Context.h">
@@ -104,19 +107,22 @@
     <ClInclude Include="src\states\SettingsState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UIElement.h">
+    <ClInclude Include="src\ui\Element.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UILayout.h">
+    <ClInclude Include="src\ui\Layout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UILabel.h">
+    <ClInclude Include="src\ui\Label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UIButton.h">
+    <ClInclude Include="src\ui\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ui\UISlider.h">
+    <ClInclude Include="src\ui\Slider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\Spacer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

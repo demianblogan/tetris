@@ -15,6 +15,7 @@ struct GameSettings
     BlockRenderStyle blockRenderStyle = BlockRenderStyle::WithOutline;
 
 	// --- Audio:
+
     unsigned int soundVolume = 10;
     unsigned int musicVolume = 10;
 };

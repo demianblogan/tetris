@@ -42,12 +42,14 @@ Game::Game()
 	, gameView({ VIRTUAL_RESOLUTION / 2.f, VIRTUAL_RESOLUTION })
 	, audioPlayer(soundBuffers)
 	, settings(Data::Paths::Settings)
-	, context(stateMachine, window, fonts, music, soundBuffers, audioPlayer, settings)
+	, context(stateMachine, window, fonts, music, soundBuffers, textures, audioPlayer, settings)
 {
+	window.setMouseCursorVisible(false);
 	window.setView(gameView);
 
 	fonts.Load(Assets::FontID::Main, Assets::Paths::Fonts::Main);
-
+	textures.Load(Assets::TextureID::BlockSpritesheetWithOutline, Assets::Paths::Textures::BlockSpritesheetWithOutline);
+	textures.Load(Assets::TextureID::BlockSpritesheetWithoutOutline, Assets::Paths::Textures::BlockSpritesheetWithoutOutline);
 	music.Load(Assets::MusicID::MainMenu, Assets::Paths::Music::MainMenu);
 
 	soundBuffers.Load(Assets::SoundID::MenuItemSelected, Assets::Paths::Sounds::MenuItemSelected);

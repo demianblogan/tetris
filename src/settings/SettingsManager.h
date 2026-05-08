@@ -17,7 +17,6 @@ public:
 
     void Load();
     void Save() const;
-
     void Apply(Context& context) const;
 
     GameSettings& GetSettings();

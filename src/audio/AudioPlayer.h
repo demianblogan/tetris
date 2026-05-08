@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <SFML/Audio/Sound.hpp>
-#include "../resources/ResourceManagers.h"
+#include "../resources/ResourceManager.h"
 
 struct ActiveSound
 {

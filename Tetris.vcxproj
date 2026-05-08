@@ -151,10 +151,12 @@
     <ClCompile Include="src\settings\SettingsManager.cpp" />
     <ClCompile Include="src\core\StateMachine.cpp" />
     <ClCompile Include="src\states\StatisticsState.cpp" />
-    <ClCompile Include="src\ui\UIButton.cpp" />
-    <ClCompile Include="src\ui\UILabel.cpp" />
-    <ClCompile Include="src\ui\UILayout.cpp" />
-    <ClCompile Include="src\ui\UISlider.cpp" />
+    <ClCompile Include="src\ui\Button.cpp" />
+    <ClCompile Include="src\ui\Element.cpp" />
+    <ClCompile Include="src\ui\Label.cpp" />
+    <ClCompile Include="src\ui\Layout.cpp" />
+    <ClCompile Include="src\ui\Slider.cpp" />
+    <ClCompile Include="src\ui\Spacer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\resources\Assets.h" />
@@ -165,18 +167,18 @@
     <ClInclude Include="src\settings\GameSettings.h" />
     <ClInclude Include="src\statistics\HighScoreEntry.h" />
     <ClInclude Include="src\statistics\HighScoreManager.h" />
-    <ClInclude Include="src\ui\UIButton.h" />
-    <ClInclude Include="src\ui\UIElement.h" />
+    <ClInclude Include="src\ui\Button.h" />
+    <ClInclude Include="src\ui\Element.h" />
     <ClInclude Include="src\states\MainMenuState.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />
-    <ClInclude Include="src\resources\ResourceManagers.h" />
     <ClInclude Include="src\settings\SettingsManager.h" />
     <ClInclude Include="src\core\State.h" />
     <ClInclude Include="src\core\StateMachine.h" />
     <ClInclude Include="src\states\StatisticsState.h" />
-    <ClInclude Include="src\ui\UILabel.h" />
-    <ClInclude Include="src\ui\UILayout.h" />
-    <ClInclude Include="src\ui\UISlider.h" />
+    <ClInclude Include="src\ui\Label.h" />
+    <ClInclude Include="src\ui\Layout.h" />
+    <ClInclude Include="src\ui\Slider.h" />
+    <ClInclude Include="src\ui\Spacer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

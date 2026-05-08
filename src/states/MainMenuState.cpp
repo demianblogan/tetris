@@ -1,111 +1,143 @@
 #include "MainMenuState.h"
 
 #include <optional>
-
 #include <SFML/Graphics/RenderWindow.hpp>
-
 #include "../audio/AudioPlayer.h"
 #include "../core/StateMachine.h"
-
+#include "../resources/Assets.h"
 #include "SettingsState.h"
 #include "StatisticsState.h"
 
+namespace
+{
+	constexpr float TopSpacing = 100.f;
+	constexpr float TitleMenuSpacing = 90.f;
+	constexpr float MenuGap = 30.f;
+	constexpr float ButtonWidth = 500.f;
+	constexpr float ButtonHeight = 120.f;
+	constexpr unsigned int TitleSize = 300;
+	constexpr unsigned int ButtonTextSize = 80;
+}
+
 MainMenuState::MainMenuState(Context& context)
 	: context(context)
-	, titleLabel(context.fonts.Get(Assets::FontID::Main), "Tetris", 300)
-	, menuLayout(UILayout::Orientation::Vertical)
+	, rootLayout(UI::Layout::Orientation::Vertical)
 {
-	// =========================
+	rootLayout.SetHorizontalAlignment(UI::Layout::Alignment::Center);
+	rootLayout.SetVerticalAlignment(UI::Layout::Alignment::Start);
+	rootLayout.SetGap(0.f);
+
+	// =====================================================
+	// Top spacer
+	// =====================================================
+
+	rootLayout.Add(std::make_unique<UI::Spacer>(sf::Vector2f{ 0.f, TopSpacing }));
+
+	// =====================================================
 	// Title
-	// =========================
+	// =====================================================
 
-	titleLabel.SetPosition({ 0.f, 100.f });
-	titleLabel.CenterHorizontally(context.window.getView().getSize().x);
+	{
+		auto title = std::make_unique<UI::Label>(
+			context.fonts.Get(Assets::FontID::Main),
+			"Tetris",
+			TitleSize
+		);
 
-	// =========================
-	// Layout
-	// =========================
+		title->SetFillColor(sf::Color::White);
 
-	menuLayout.SetGap(30.f);
-	menuLayout.SetPosition({ 700.f, 400.f });
+		rootLayout.Add(std::move(title));
+	}
 
-	// =========================
-	// Start Game button
-	// =========================
+	// =====================================================
+	// Spacer between title and menu
+	// =====================================================
 
-	auto startGameButton = std::make_unique<UIButton>(sf::Vector2f{ 500.f, 120.f }, sf::Color(60, 60, 60));
-	startGameButton->SetLabel(std::make_unique<UILabel>(context.fonts.Get(Assets::FontID::Main), "Start Game", 80));
-	startGameButton->SetNormalStyle({ .backgroundColor = sf::Color(60, 60, 60), .textColor = sf::Color::White });
-	startGameButton->SetSelectedStyle({ .backgroundColor = sf::Color::White, .textColor = sf::Color::Black });
+	rootLayout.Add(std::make_unique<UI::Spacer>(sf::Vector2f{ 0.f, TitleMenuSpacing }));
 
-	UIButton* startGameButtonPointer = startGameButton.get();
-	menuLayout.Add(std::move(startGameButton));
-	buttons.push_back({ startGameButtonPointer, MenuAction::StartGame });
+	// =====================================================
+	// Menu layout
+	// =====================================================
 
-	// =========================
-	// Options button
-	// =========================
+	{
+		auto layout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
 
-	auto optionsButton = std::make_unique<UIButton>(sf::Vector2f{ 500.f, 120.f }, sf::Color(60, 60, 60));
-	optionsButton->SetLabel(std::make_unique<UILabel>(context.fonts.Get(Assets::FontID::Main), "Options", 80));
-	optionsButton->SetNormalStyle({ .backgroundColor = sf::Color(60, 60, 60), .textColor = sf::Color::White });
-	optionsButton->SetSelectedStyle({ .backgroundColor = sf::Color::White, .textColor = sf::Color::Black });
+		layout->SetGap(MenuGap);
+		layout->SetHorizontalAlignment(UI::Layout::Alignment::Center);
+		menuLayout = layout.get();
 
-	UIButton* optionsButtonPointer = optionsButton.get();
-	menuLayout.Add(std::move(optionsButton));
-	buttons.push_back({ optionsButtonPointer, MenuAction::Options });
+		rootLayout.Add(std::move(layout));
+	}
 
-	// =========================
-	// Statistics button
-	// =========================
+	// =====================================================
+	// Buttons
+	// =====================================================
 
-	auto statisticsButton = std::make_unique<UIButton>(sf::Vector2f{ 500.f, 120.f }, sf::Color(60, 60, 60));
-	statisticsButton->SetLabel(std::make_unique<UILabel>(context.fonts.Get(Assets::FontID::Main), "Statistics", 80));
-	statisticsButton->SetNormalStyle({ .backgroundColor = sf::Color(60, 60, 60), .textColor = sf::Color::White });
-	statisticsButton->SetSelectedStyle({ .backgroundColor = sf::Color::White, .textColor = sf::Color::Black });
-
-	UIButton* statisticsButtonPointer = statisticsButton.get();
-	menuLayout.Add(std::move(statisticsButton));
-	buttons.push_back({ statisticsButtonPointer, MenuAction::Statistics });
-
-	// =========================
-	// Exit button
-	// =========================
-
-	auto exitButton = std::make_unique<UIButton>(sf::Vector2f{ 500.f, 120.f }, sf::Color(60, 60, 60));
-	exitButton->SetLabel(std::make_unique<UILabel>(context.fonts.Get(Assets::FontID::Main),"Exit",80));
-	exitButton->SetNormalStyle({ .backgroundColor = sf::Color(60, 60, 60), .textColor = sf::Color::White });
-	exitButton->SetSelectedStyle({ .backgroundColor = sf::Color::White, .textColor = sf::Color::Black });
-
-	UIButton* exitButtonPointer = exitButton.get();
-	menuLayout.Add(std::move(exitButton));
-	buttons.push_back({ exitButtonPointer, MenuAction::Exit });
-
-	// =========================
-	// Initial selection
-	// =========================
+	CreateMenuButton("Start Game", MenuAction::StartGame);
+	CreateMenuButton("Options", MenuAction::Options);
+	CreateMenuButton("Statistics", MenuAction::Statistics);
+	CreateMenuButton("Exit", MenuAction::Exit);
 
 	UpdateSelection();
-
-	// =========================
-	// Music
-	// =========================
+	UpdateLayout();
 
 	sf::Music& music = context.music.Get(Assets::MusicID::MainMenu);
 	music.setLooping(true);
+
 	if (music.getStatus() != sf::Music::Status::Playing)
 	{
 		music.play();
 	}
 }
 
-void MainMenuState::ProcessEvents(sf::RenderWindow& window)
+void MainMenuState::CreateMenuButton(const sf::String& text, MenuAction action)
+{
+	auto button = std::make_unique<UI::Button>(sf::Vector2f{ ButtonWidth, ButtonHeight });
+
+	button->SetLabel(std::make_unique<UI::Label>(
+		context.fonts.Get(Assets::FontID::Main),
+		text,
+		ButtonTextSize)
+	);
+
+	button->SetNormalStyle({ .backgroundColor = sf::Color(60, 60, 60), .textColor = sf::Color::White });
+	button->SetSelectedStyle({ .backgroundColor = sf::Color::White,	.textColor = sf::Color::Black });
+
+	UI::Button* buttonPointer = button.get();
+	menuLayout->Add(std::move(button));
+	buttons.push_back({ .button = buttonPointer, .action = action });
+}
+
+void MainMenuState::ProcessEvents(sf::RenderWindow& window
+)
 {
 	while (const std::optional event = window.pollEvent())
 	{
 		if (event->is<sf::Event::Closed>())
 		{
 			window.close();
+		}
+		else if (const auto* resized = event->getIf<sf::Event::Resized>())
+		{
+			sf::View view = window.getView();
+
+			view.setSize(
+				{
+					static_cast<float>(resized->size.x),
+					static_cast<float>(resized->size.y)
+				}
+			);
+
+			view.setCenter(
+				{
+					static_cast<float>(resized->size.x) / 2.f,
+					static_cast<float>(resized->size.y) / 2.f
+				}
+			);
+
+			window.setView(view);
+
+			UpdateLayout();
 		}
 		else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
 		{
@@ -132,56 +164,23 @@ void MainMenuState::ProcessEvents(sf::RenderWindow& window)
 				break;
 			}
 		}
-		else if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>())
-		{
-			if (mouseButtonPressed->button == sf::Mouse::Button::Left)
-			{
-				const sf::Vector2f mouseWorldPosition = context.window.mapPixelToCoords(
-						{
-							mouseButtonPressed->position.x,
-							mouseButtonPressed->position.y
-						}
-					);
-
-				for (std::size_t i = 0; i < buttons.size(); i++)
-				{
-					if (buttons[i].button->Contains(mouseWorldPosition))
-					{
-						selectedIndex =	static_cast<int>(i);
-						UpdateSelection();
-						context.audioPlayer.Play(Assets::SoundID::MenuItemPressed);
-						ActivateSelectedButton();
-						break;
-					}
-				}
-			}
-		}
 	}
 }
 
 void MainMenuState::Update(float deltaTime)
 {
-	const sf::Vector2i mousePixelPosition =	sf::Mouse::getPosition(context.window);
-	const sf::Vector2f mouseWorldPosition =	context.window.mapPixelToCoords(mousePixelPosition);
-
-	for (std::size_t i = 0; i < buttons.size(); i++)
-	{
-		const bool hovered = buttons[i].button->Contains(mouseWorldPosition);
-		buttons[i].button->SetHovered(hovered);
-
-		if (hovered && selectedIndex != i)
-		{
-			selectedIndex = static_cast<int>(i);
-			UpdateSelection();
-			context.audioPlayer.Restart(Assets::SoundID::MenuItemSelected);
-		}
-	}
+	// No code
 }
 
 void MainMenuState::Render(sf::RenderWindow& window)
 {
-	titleLabel.Render(window);
-	menuLayout.Render(window);
+	rootLayout.Render(window);
+}
+
+void MainMenuState::UpdateLayout()
+{
+	const sf::Vector2f viewSize = context.window.getView().getSize();
+	rootLayout.Arrange({ 0.f, 0.f }, viewSize);
 }
 
 void MainMenuState::SelectPreviousMenuItem()
@@ -212,7 +211,7 @@ void MainMenuState::UpdateSelection()
 {
 	for (std::size_t i = 0; i < buttons.size(); i++)
 	{
-		buttons[i].button->SetSelected(i == selectedIndex);
+		buttons[i].button->SetSelected(i == static_cast<std::size_t>(selectedIndex));
 	}
 }
 
@@ -221,12 +220,11 @@ void MainMenuState::ActivateSelectedButton()
 	switch (buttons[selectedIndex].action)
 	{
 	case MenuAction::StartGame:
-		// TODO: Start game
+		// TODO: Start Game
 		break;
 
 	case MenuAction::Options:
-		// TODO: Implement SettingsState and change state to it
-		//context.stateMachine.ChangeState(std::make_unique<SettingsState>(context));
+		context.stateMachine.ChangeState(std::make_unique<SettingsState>(context));
 		break;
 
 	case MenuAction::Statistics:
