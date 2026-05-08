@@ -7,6 +7,7 @@
 #include "../resources/Assets.h"
 #include "SettingsState.h"
 #include "StatisticsState.h"
+#include "GameState.h"
 
 namespace
 {
@@ -220,7 +221,7 @@ void MainMenuState::ActivateSelectedButton()
 	switch (buttons[selectedIndex].action)
 	{
 	case MenuAction::StartGame:
-		// TODO: Start Game
+		context.stateMachine.ChangeState(std::make_unique<GameState>(context));
 		break;
 
 	case MenuAction::Options:

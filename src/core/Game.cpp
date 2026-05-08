@@ -67,7 +67,7 @@ void Game::Run()
 
 	while (IsWindowOpen())
 	{
-		float deltaTime = deltaTimeClock.reset().asSeconds();
+		float deltaTime = deltaTimeClock.restart().asSeconds();
 
 		ProcessEvents();
 		stateMachine.ApplyPendingChanges();
