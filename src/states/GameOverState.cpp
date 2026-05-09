@@ -138,6 +138,14 @@ GameOverState::GameOverState(Context& context, int finalScore)
 
 	UpdateSelection();
 	UpdateLayout();
+
+	context.music.Get(Assets::MusicID::Gameplay).stop();
+
+	sf::Music& music = context.music.Get(Assets::MusicID::GameOver);
+	if (music.getStatus() != sf::Music::Status::Playing)
+	{
+		music.play();
+	}
 }
 
 void GameOverState::ProcessEvents(sf::RenderWindow& window)

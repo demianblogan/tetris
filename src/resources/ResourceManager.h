@@ -63,6 +63,24 @@ public:
 
 		return resources.at(id);
 	}
+
+	template <typename Function>
+	void ForEach(Function function)
+	{
+		for (auto& [id, resource] : resources)
+		{
+			function(resource);
+		}
+	}
+
+	template <typename Function>
+	void ForEach(Function function) const
+	{
+		for (const auto& [id, resource] : resources)
+		{
+			function(resource);
+		}
+	}
 };
 
 using FontManager = ResourceManager<sf::Font, Assets::FontID>;

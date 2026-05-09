@@ -52,7 +52,11 @@ void SettingsManager::Apply(Context& context) const
 	// --- Audio settings ---
 
     float musicVolume = settings.musicVolume * 10.f;
-    context.music.Get(Assets::MusicID::MainMenu).setVolume(musicVolume);
+    context.music.ForEach([musicVolume](sf::Music& music)
+        {
+            music.setVolume(musicVolume);
+        }
+    );
 
     float soundVolume = settings.soundVolume * 10.f;
     context.audioPlayer.SetGlobalVolume(soundVolume);

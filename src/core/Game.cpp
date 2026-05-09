@@ -48,10 +48,19 @@ Game::Game()
 	fonts.Load(Assets::FontID::Main, Assets::Paths::Fonts::Main);
 	textures.Load(Assets::TextureID::BlockSpritesheetWithOutline, Assets::Paths::Textures::BlockSpritesheetWithOutline);
 	textures.Load(Assets::TextureID::BlockSpritesheetWithoutOutline, Assets::Paths::Textures::BlockSpritesheetWithoutOutline);
+	
 	music.Load(Assets::MusicID::MainMenu, Assets::Paths::Music::MainMenu);
+	music.Load(Assets::MusicID::Gameplay, Assets::Paths::Music::Gameplay);
+	music.Load(Assets::MusicID::GameOver, Assets::Paths::Music::GameOver);
 
 	soundBuffers.Load(Assets::SoundID::MenuItemSelected, Assets::Paths::Sounds::MenuItemSelected);
 	soundBuffers.Load(Assets::SoundID::MenuItemPressed, Assets::Paths::Sounds::MenuItemPressed);
+	soundBuffers.Load(Assets::SoundID::DropPiece, Assets::Paths::Sounds::DropPiece);
+	soundBuffers.Load(Assets::SoundID::MovePiece, Assets::Paths::Sounds::MovePiece);
+	soundBuffers.Load(Assets::SoundID::RotatePiece, Assets::Paths::Sounds::RotatePiece);
+	soundBuffers.Load(Assets::SoundID::PieceHitWall, Assets::Paths::Sounds::PieceHitWall);
+	soundBuffers.Load(Assets::SoundID::NextLevel, Assets::Paths::Sounds::NextLevel);
+	soundBuffers.Load(Assets::SoundID::RowCleared, Assets::Paths::Sounds::RowCleared);
 
 	settings.Load();
 	settings.Apply(context);

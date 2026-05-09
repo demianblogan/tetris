@@ -9,13 +9,22 @@ namespace Assets
 
 	enum class MusicID
 	{
-		MainMenu
+		MainMenu,
+		Gameplay,
+		GameOver
 	};
 
 	enum class SoundID
 	{
 		MenuItemSelected,
-		MenuItemPressed
+		MenuItemPressed,
+
+		DropPiece,
+		MovePiece,
+		NextLevel,
+		PieceHitWall,
+		RotatePiece,
+		RowCleared
 	};
 
 	enum class TextureID
@@ -34,12 +43,21 @@ namespace Assets
 		namespace Music
 		{
 			inline constexpr const char* MainMenu = "assets/music/main_menu_music.ogg";
+			inline constexpr const char* Gameplay = "assets/music/gameplay_music.ogg";
+			inline constexpr const char* GameOver = "assets/music/game_over_music.ogg";
 		}
 
 		namespace Sounds
 		{
 			inline constexpr const char* MenuItemSelected = "assets/sounds/menu_item_selected.ogg";
 			inline constexpr const char* MenuItemPressed = "assets/sounds/menu_item_pressed.ogg";
+
+			inline constexpr const char* DropPiece = "assets/sounds/drop_piece.ogg";
+			inline constexpr const char* MovePiece = "assets/sounds/move_piece.ogg";
+			inline constexpr const char* NextLevel = "assets/sounds/next_level.ogg";
+			inline constexpr const char* PieceHitWall = "assets/sounds/piece_hit_wall.ogg";
+			inline constexpr const char* RotatePiece = "assets/sounds/rotate_piece.ogg";
+			inline constexpr const char* RowCleared = "assets/sounds/row_cleared.ogg";
 		}
 
 		namespace Textures

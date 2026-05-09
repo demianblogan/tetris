@@ -82,6 +82,9 @@ MainMenuState::MainMenuState(Context& context)
 	UpdateSelection();
 	UpdateLayout();
 
+	context.music.Get(Assets::MusicID::Gameplay).stop();
+	context.music.Get(Assets::MusicID::GameOver).stop();
+
 	sf::Music& music = context.music.Get(Assets::MusicID::MainMenu);
 	music.setLooping(true);
 

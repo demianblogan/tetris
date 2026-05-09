@@ -14,6 +14,7 @@
 #include "../settings/SettingsManager.h"
 #include "PauseState.h"
 #include "GameOverState.h"
+#include "../audio/AudioPlayer.h"
 
 GameState::GameState(Context& context)
 	: context(context)
@@ -85,6 +86,16 @@ GameState::GameState(Context& context)
 		},
 		hudSize
 	);
+
+	context.music.Get(Assets::MusicID::MainMenu).stop();
+
+	sf::Music& music = context.music.Get(Assets::MusicID::Gameplay);
+	music.setLooping(true);
+
+	if (music.getStatus() != sf::Music::Status::Playing)
+	{
+		music.play();
+	}
 }
 
 void GameState::ProcessEvents(sf::RenderWindow& window)
@@ -334,10 +345,13 @@ void GameState::TryMoveTetromino(int offsetX, int offsetY)
 
 	if (!board.CanPlace(movedTetromino))
 	{
+		context.audioPlayer.Play(Assets::SoundID::PieceHitWall);
 		return;
 	}
 
 	currentTetromino = movedTetromino;
+
+	context.audioPlayer.Play(Assets::SoundID::MovePiece);
 }
 
 void GameState::TryRotateTetromino()
@@ -348,10 +362,13 @@ void GameState::TryRotateTetromino()
 
 	if (!board.CanPlace(rotatedTetromino))
 	{
+		context.audioPlayer.Play(Assets::SoundID::PieceHitWall);
 		return;
 	}
 
 	currentTetromino = rotatedTetromino;
+
+	context.audioPlayer.Play(Assets::SoundID::RotatePiece);
 }
 
 void GameState::TryDropTetromino()
@@ -370,6 +387,8 @@ void GameState::TryDropTetromino()
 		currentTetromino = movedTetromino;
 	}
 
+	context.audioPlayer.Play(Assets::SoundID::DropPiece);
+
 	board.LockTetromino(currentTetromino);
 	HandleTetrominoLanding();
 
@@ -381,8 +400,20 @@ void GameState::HandleTetrominoLanding()
 	board.LockTetromino(currentTetromino);
 
 	const int clearedRows = board.ClearFullRows();
+	if (clearedRows != 0)
+	{
+		context.audioPlayer.Play(Assets::SoundID::RowCleared);
+	}
+
 	score += clearedRows * 10;
+
+	const int previousLevel = level;
 	level = score / SCORE_PER_LEVEL + 1;
+	if (level > previousLevel)
+	{
+		context.audioPlayer.Play(Assets::SoundID::NextLevel);
+	}
+
 	fallDelay = std::max(0.1f, 0.5f - (level - 1) * 0.05f);
 
 	scoreLabel->SetString("Score: " + std::to_string(score));

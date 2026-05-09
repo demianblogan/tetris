@@ -101,6 +101,7 @@ int Board::ClearFullRows()
 		++y;
 	}
 
+	
 	return clearedRowsCount;
 }
 
