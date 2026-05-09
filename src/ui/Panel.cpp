@@ -1,3 +1,5 @@
+// Panel.cpp
+
 #include "Panel.h"
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -10,61 +12,59 @@ namespace UI
 		// No code
 	}
 
-	void Panel::SetLabel(std::unique_ptr<Label> label)
+	void Panel::SetPadding(sf::Vector2f padding)
 	{
-		this->label = std::move(label);
+		this->padding = padding;
 	}
 
-	void Panel::SetPreferredSize(sf::Vector2f size)
+	void Panel::SetChild(std::unique_ptr<Element> child)
 	{
-		preferredSize = size;
+		this->child = std::move(child);
 	}
 
 	sf::Vector2f Panel::Measure() const
 	{
-		return preferredSize;
+		return size;
 	}
 
 	void Panel::Arrange(sf::Vector2f position, sf::Vector2f size)
 	{
 		Element::Arrange(position, size);
 
-		if (label)
+		if (child == nullptr)
 		{
-			const sf::Vector2f labelSize = label->Measure();
-
-			label->Arrange(
-				{
-					position.x + (size.x - labelSize.x) / 2.f,
-					position.y + (size.y - labelSize.y) / 2.f
-				},
-				labelSize
-			);
+			return;
 		}
+
+		child->Arrange(
+			{
+				position.x + padding.x,
+				position.y + padding.y
+			},
+			{
+				size.x - padding.x * 2.f,
+				size.y - padding.y * 2.f
+			}
+		);
 	}
 
 	void Panel::Render(sf::RenderWindow& window) const
 	{
-		if (backgroundSprite)
+		sf::Sprite sprite = backgroundSprite;
+		const sf::FloatRect bounds = sprite.getLocalBounds();
+		sprite.setPosition(position);
+		sprite.setScale(
+			{
+				size.x / bounds.size.x,
+				size.y / bounds.size.y
+			}
+		);
+
+		window.draw(sprite);
+
+		if (child)
 		{
-			sf::Sprite sprite = *backgroundSprite;
-
-			const sf::FloatRect bounds = sprite.getLocalBounds();
-
-			sprite.setPosition(position);
-			sprite.setScale(
-				{
-					size.x / bounds.size.x,
-					size.y / bounds.size.y
-				}
-			);
-
-			window.draw(sprite);
-		}
-
-		if (label)
-		{
-			label->Render(window);
+			child->Render(window);
 		}
 	}
 }

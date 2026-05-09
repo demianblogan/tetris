@@ -7,6 +7,8 @@
 #include "../game/TetrominoBag.h"
 #include "../ui/Label.h"
 #include "../ui/Layout.h"
+#include <SFML/Graphics/Sprite.hpp>
+#include <ui/Panel.h>
 
 class GameState : public State
 {
@@ -21,19 +23,25 @@ private:
 	Board board;
 	TetrominoBag tetrominoBag;
 	Tetromino currentTetromino;
+
 	Tetromino nextTetromino;
+	sf::Vector2f nextTetrominoPreviewPosition;
 
 	float fallTimer = 0.f;
 	float fallDelay = 0.5f;
 
 	int score = 0;
-	std::unique_ptr<UI::Layout> hudLayout;
+
+	std::unique_ptr<UI::Layout> rightHudLayout;
+	std::unique_ptr<UI::Panel> controlsPanel;
 
 	UI::Label* nextTetrominoLabel = nullptr;
 	UI::Label* scoreLabel = nullptr;
 	UI::Label* levelLabel = nullptr;
 
 	int level = 1;
+
+	sf::Sprite backgroundSprite;
 
 	bool SpawnTetromino();
 	void TryMoveTetromino(int offsetX, int offsetY);

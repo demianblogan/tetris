@@ -11,16 +11,16 @@ namespace UI
 	class Panel final : public Element
 	{
 	private:
-		std::unique_ptr<Label> label;
-		std::optional<sf::Sprite> backgroundSprite;
+		sf::Sprite backgroundSprite;
+		std::unique_ptr<Element> child;
 
-		sf::Vector2f preferredSize;
+		sf::Vector2f padding = { 0.f, 0.f };
 
 	public:
 		explicit Panel(const sf::Sprite& sprite);
 
-		void SetLabel(std::unique_ptr<Label> label);
-		void SetPreferredSize(sf::Vector2f size);
+		void SetPadding(sf::Vector2f padding);
+		void SetChild(std::unique_ptr<Element> child);
 
 		[[nodiscard]] sf::Vector2f Measure() const override;
 		void Arrange(sf::Vector2f position, sf::Vector2f size) override;

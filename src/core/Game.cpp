@@ -53,6 +53,7 @@ Game::Game()
 	textures.Load(Assets::TextureID::MenuBackground, Assets::Paths::Textures::MenuBackground);
 	textures.Load(Assets::TextureID::TitleBackground, Assets::Paths::Textures::TitleBackground);
 	textures.Load(Assets::TextureID::PanelBackground, Assets::Paths::Textures::PanelBackground);
+	textures.Load(Assets::TextureID::GameBackground, Assets::Paths::Textures::GameBackground);
 
 	music.Load(Assets::MusicID::MainMenu, Assets::Paths::Music::MainMenu);
 	music.Load(Assets::MusicID::Gameplay, Assets::Paths::Music::Gameplay);

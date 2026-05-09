@@ -20,52 +20,90 @@ GameState::GameState(Context& context)
 	: context(context)
 	, currentTetromino(tetrominoBag.Next(), { Board::WIDTH / 2 - 2, 0 })
 	, nextTetromino(tetrominoBag.Next(), { 0, 0 })
+	, backgroundSprite(context.textures.Get(Assets::TextureID::GameBackground))
 {
-	hudLayout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
-	hudLayout->SetGap(32.f);
+	backgroundSprite.setColor(sf::Color(150, 150, 150));
+
+	rightHudLayout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
+	rightHudLayout->SetGap(32.f);
+
+	sf::Sprite panelSprite(context.textures.Get(Assets::TextureID::PanelBackground));
 
 	// =====================================================
-	// Next tetromino label
+	// Next tetromino panel
 	// =====================================================
+	{
+		auto panel = std::make_unique<UI::Panel>(panelSprite);
 
-	auto nextTetrominoLabelElement = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Next Tetromino:", 60);
-	nextTetrominoLabelElement->SetFillColor(sf::Color::White);
-	nextTetrominoLabel = nextTetrominoLabelElement.get();
-	hudLayout->Add(std::move(nextTetrominoLabelElement));
+		auto layout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
+		layout->SetGap(20.f);
 
-	// =====================================================
-	// Spacer
-	// =====================================================
+		auto label = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Next Tetromino", 60);
+		label->SetFillColor(sf::Color::White);
+		nextTetrominoLabel = label.get();
+		layout->Add(std::move(label));
 
-	hudLayout->Add(std::make_unique<UI::Spacer>(sf::Vector2f(0.f, 140.f)));
+		panel->SetChild(std::move(layout));
+		panel->SetWidthPixels(450.f);
+		panel->SetHeightPixels(260.f);
+		panel->SetPadding({ 60.f, 50.f });
 
-	// =====================================================
-	// Score label
-	// =====================================================
-
-	auto scoreLabelElement = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Score: 0", 60);
-	scoreLabelElement->SetFillColor(sf::Color::White);
-	scoreLabel = scoreLabelElement.get();
-	hudLayout->Add(std::move(scoreLabelElement));
+		rightHudLayout->Add(std::move(panel));
+	}
 
 	// =====================================================
-	// Level label
+	// Score panel
+	// =====================================================
+	{
+		auto panel = std::make_unique<UI::Panel>(panelSprite);
+
+		auto layout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
+		layout->SetGap(30.f);
+
+		// =================================================
+		// Score label
+		// =================================================
+		{
+			auto label = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Score: 0", 60);
+			label->SetFillColor(sf::Color::White);
+			scoreLabel = label.get();
+			layout->Add(std::move(label));
+		}
+
+		// =================================================
+		// Level label
+		// =================================================
+		{
+			auto label = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Level: 1", 60);
+			label->SetFillColor(sf::Color::White);
+			levelLabel = label.get();
+			layout->Add(std::move(label));
+		}
+
+		panel->SetChild(std::move(layout));
+		panel->SetWidthPixels(340.f);
+		panel->SetHeightPixels(200.f);
+		panel->SetPadding({ 60.f, 50.f });
+
+		rightHudLayout->Add(std::move(panel));
+	}
+
+	// =====================================================
+	// Controls panel
 	// =====================================================
 
-	auto levelLabelElement = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Level: 1", 60);
-	levelLabelElement->SetFillColor(sf::Color::White);
-	levelLabel = levelLabelElement.get();
-	hudLayout->Add(std::move(levelLabelElement));
+	sf::Sprite controlsSprite(context.textures.Get(Assets::TextureID::PanelBackground));
 
-	// =====================================================
-	// Spacer
-	// =====================================================
+	controlsPanel = std::make_unique<UI::Panel>(controlsSprite);
 
-	hudLayout->Add(std::make_unique<UI::Spacer>(sf::Vector2f(0.f, 300.f)));
+	auto controlsLayout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
 
-	// =====================================================
-	// Controls label
-	// =====================================================
+	controlsLayout->SetPadding(
+		{
+			.left = 80.f,
+			.top = 50.f,
+		}
+	);
 
 	sf::String controlsText =
 		L"[←] [↓] [→] - Move tetromino\n"
@@ -73,19 +111,37 @@ GameState::GameState(Context& context)
 		L"[Space] - Drop tetromino\n"
 		L"[ESC] - Pause";
 
-	auto controlsLabel = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), controlsText, 50);
-	controlsLabel->SetFillColor(sf::Color(150, 150, 150));
-	hudLayout->Add(std::move(controlsLabel));
+	auto controlsLabel = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), controlsText, 45);
+	controlsLabel->SetFillColor(sf::Color::White);
+	controlsLayout->Add(std::move(controlsLabel));
 
-	const sf::Vector2f hudSize = hudLayout->Measure();
+	controlsPanel->SetChild(std::move(controlsLayout));
+	controlsPanel->SetWidthPixels(620.f);
+	controlsPanel->SetHeightPixels(300.f);
 
-	hudLayout->Arrange(
+	const sf::Vector2f rightHudSize = rightHudLayout->Measure();
+
+	rightHudLayout->Arrange(
 		{
 			BOARD_POSITION.x + Board::WIDTH * BLOCK_SIZE + 100.f,
 			BOARD_POSITION.y
 		},
-		hudSize
+		rightHudSize
 	);
+
+	controlsPanel->Arrange(
+		{
+			10,
+			BOARD_POSITION.y
+		},
+		{ 620.f, 300.f }
+	);
+
+	nextTetrominoPreviewPosition =
+	{
+		BOARD_POSITION.x + Board::WIDTH * BLOCK_SIZE + 240.f,
+		BOARD_POSITION.y + 120.f
+	};
 
 	context.music.Get(Assets::MusicID::MainMenu).stop();
 
@@ -164,6 +220,8 @@ void GameState::Update(float deltaTime)
 
 void GameState::Render(sf::RenderWindow& window)
 {
+	window.draw(backgroundSprite);
+
 	// =====================================================
 	// Render board background tiles
 	// =====================================================
@@ -380,7 +438,8 @@ void GameState::Render(sf::RenderWindow& window)
 	// Render UI
 	// =====================================================
 
-	hudLayout->Render(window);
+	rightHudLayout->Render(window);
+	controlsPanel->Render(window);
 
 	// =====================================================
 	// Render next tetromino preview
@@ -409,18 +468,12 @@ void GameState::Render(sf::RenderWindow& window)
 		}
 	);
 
-	const sf::Vector2f previewPosition
-	{
-		BOARD_POSITION.x + Board::WIDTH * BLOCK_SIZE + 200.f,
-		BOARD_POSITION.y + 80.f
-	};
-
 	for (const sf::Vector2i& blockPosition : previewBlockPositions)
 	{
 		blockSprite.setPosition(
 			{
-				previewPosition.x + blockPosition.x * PREVIEW_BLOCK_SIZE,
-				previewPosition.y + blockPosition.y * PREVIEW_BLOCK_SIZE
+				nextTetrominoPreviewPosition.x + blockPosition.x * PREVIEW_BLOCK_SIZE,
+				nextTetrominoPreviewPosition.y + blockPosition.y * PREVIEW_BLOCK_SIZE
 			}
 		);
 

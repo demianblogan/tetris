@@ -34,7 +34,8 @@ namespace Assets
 		ButtonBackground,
 		MenuBackground,
 		TitleBackground,
-		PanelBackground
+		PanelBackground,
+		GameBackground
 	};
 
 	namespace Paths
@@ -66,12 +67,13 @@ namespace Assets
 
 		namespace Textures
 		{
-			inline constexpr const char* BlockSpritesheetWithOutline = "assets/sprites/block_spritesheet_with_outline.png";
-			inline constexpr const char* BlockSpritesheetWithoutOutline = "assets/sprites/block_spritesheet_without_outline.png";
-			inline constexpr const char* ButtonBackground = "assets/sprites/button_background.png";
-			inline constexpr const char* MenuBackground = "assets/sprites/menu_background.png";
-			inline constexpr const char* TitleBackground = "assets/sprites/title_background.png";
-			inline constexpr const char* PanelBackground = "assets/sprites/panel_background.png";
+			inline constexpr const char* BlockSpritesheetWithOutline = "assets/textures/block_spritesheet_with_outline.png";
+			inline constexpr const char* BlockSpritesheetWithoutOutline = "assets/textures/block_spritesheet_without_outline.png";
+			inline constexpr const char* ButtonBackground = "assets/textures/button_background.png";
+			inline constexpr const char* MenuBackground = "assets/textures/menu_background.png";
+			inline constexpr const char* TitleBackground = "assets/textures/title_background.png";
+			inline constexpr const char* PanelBackground = "assets/textures/panel_background.png";
+			inline constexpr const char* GameBackground = "assets/textures/game_background.png";
 		}
 	}
 }
