@@ -32,6 +32,7 @@ private:
 
 	UI::Layout rootLayout;
 	UI::Layout* menuLayout = nullptr;
+	UI::Button* saveButton = nullptr;
 
 	std::vector<MenuButton> buttons;
 
@@ -44,7 +45,6 @@ private:
 	bool isHighScore = false;
 	sf::String playerName;
 
-private:
 	void CreateMenuButton(const sf::String& text, MenuAction action);
 
 	void SelectPreviousMenuItem();
@@ -54,6 +54,9 @@ private:
 	void UpdateLayout();
 	void ActivateSelectedButton();
 
+	void UpdateSaveButtonState();
+
+	[[nodiscard]] sf::String TrimPlayerName(const sf::String& string) const;
 	[[nodiscard]] bool IsPlayerNameValid() const;
 
 public:

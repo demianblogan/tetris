@@ -11,10 +11,10 @@
 namespace
 {
 	constexpr float TopSpacing = 80.f;
-	constexpr float RootGap = 100.f;
+	constexpr float RootGap = 20.f;
 	constexpr float ScoresGap = 30.f;
 	constexpr float FooterGap = 20.f;
-	constexpr float FooterSpacing = 40.f;
+	constexpr float FooterSpacing = 80.f;
 	constexpr unsigned int TitleSize = 120;
 	constexpr unsigned int ScoreSize = 70;
 	constexpr unsigned int FooterSize = 50;
@@ -24,7 +24,10 @@ StatisticsState::StatisticsState(Context& context)
 	: context(context)
 	, highScoreManager(Data::Paths::Scores)
 	, rootLayout(UI::Layout::Orientation::Vertical)
+	, backgroundSprite(context.textures.Get(Assets::TextureID::MenuBackground))
 {
+	backgroundSprite.setColor(sf::Color(255, 255, 255, 180));
+
 	highScoreManager.Load();
 
 	rootLayout.SetHorizontalAlignment(UI::Layout::Alignment::Center);
@@ -47,6 +50,12 @@ StatisticsState::StatisticsState(Context& context)
 
 		rootLayout.Add(std::move(title));
 	}
+
+	// =====================================================
+	// Spacer between title and scores
+	// =====================================================
+
+	rootLayout.Add(std::make_unique<UI::Spacer>(sf::Vector2f{ 0.f, 130.f }));
 
 	// =====================================================
 	// Scores layout
@@ -124,87 +133,88 @@ StatisticsState::StatisticsState(Context& context)
 	}
 
 	UpdateLayout();
-}
-
-void StatisticsState::UpdateScoreLabels()
-{
-	const std::vector<HighScoreEntry>& records = highScoreManager.GetRecords();
-
-	for (std::size_t i = 0; i < HighScoreManager::MAX_RECORDS; i++)
-	{
-		if (i < records.size())
-		{
-			scoreLabels[i]->SetString(std::to_string(i + 1) + ". " + records[i].playerName + " = " + std::to_string(records[i].score));
-		}
-		else
-		{
-			scoreLabels[i]->SetString(std::to_string(i + 1) + ". ...");
-		}
 	}
 
-	UpdateLayout();
-}
-
-void StatisticsState::UpdateLayout()
-{
-	const sf::Vector2f viewSize = context.window.getView().getSize();
-	rootLayout.Arrange({ 0.f, 0.f }, viewSize);
-}
-
-void StatisticsState::ProcessEvents(sf::RenderWindow& window)
-{
-	while (const std::optional event = window.pollEvent())
+		void StatisticsState::UpdateScoreLabels()
 	{
-		if (event->is<sf::Event::Closed>())
+		const std::vector<HighScoreEntry>& records = highScoreManager.GetRecords();
+
+		for (std::size_t i = 0; i < HighScoreManager::MAX_RECORDS; i++)
 		{
-			window.close();
-		}
-		else if (const auto* resized = event->getIf<sf::Event::Resized>())
-		{
-			sf::View view = window.getView();
-
-			view.setSize(
-				{
-					static_cast<float>(resized->size.x),
-					static_cast<float>(resized->size.y)
-				}
-			);
-
-			view.setCenter(
-				{
-					static_cast<float>(resized->size.x) / 2.f,
-					static_cast<float>(resized->size.y) / 2.f
-				}
-			);
-
-			window.setView(view);
-
-			UpdateLayout();
-		}
-		else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
-		{
-			switch (keyPressed->scancode)
+			if (i < records.size())
 			{
-			case sf::Keyboard::Scancode::Escape:
-				context.stateMachine.ChangeState(std::make_unique<MainMenuState>(context));
-				return;
+				scoreLabels[i]->SetString(std::to_string(i + 1) + ". " + records[i].playerName + " = " + std::to_string(records[i].score));
+			}
+			else
+			{
+				scoreLabels[i]->SetString(std::to_string(i + 1) + ". ...");
+			}
+		}
 
-			case sf::Keyboard::Scancode::Delete:
-				highScoreManager.Clear();
-				highScoreManager.Save();
-				UpdateScoreLabels();
-				break;
+		UpdateLayout();
+	}
+
+	void StatisticsState::UpdateLayout()
+	{
+		const sf::Vector2f viewSize = context.window.getView().getSize();
+		rootLayout.Arrange({ 0.f, 0.f }, viewSize);
+	}
+
+	void StatisticsState::ProcessEvents(sf::RenderWindow& window)
+	{
+		while (const std::optional event = window.pollEvent())
+		{
+			if (event->is<sf::Event::Closed>())
+			{
+				window.close();
+			}
+			else if (const auto* resized = event->getIf<sf::Event::Resized>())
+			{
+				sf::View view = window.getView();
+
+				view.setSize(
+					{
+						static_cast<float>(resized->size.x),
+						static_cast<float>(resized->size.y)
+					}
+				);
+
+				view.setCenter(
+					{
+						static_cast<float>(resized->size.x) / 2.f,
+						static_cast<float>(resized->size.y) / 2.f
+					}
+				);
+
+				window.setView(view);
+
+				UpdateLayout();
+			}
+			else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+			{
+				switch (keyPressed->scancode)
+				{
+				case sf::Keyboard::Scancode::Escape:
+					context.stateMachine.ChangeState(std::make_unique<MainMenuState>(context));
+					return;
+
+				case sf::Keyboard::Scancode::Delete:
+					highScoreManager.Clear();
+					highScoreManager.Save();
+					UpdateScoreLabels();
+					break;
+				}
 			}
 		}
 	}
-}
 
-void StatisticsState::Update(float deltaTime)
-{
-	// No code
-}
+	void StatisticsState::Update(float deltaTime)
+	{
+		// No code
+	}
 
-void StatisticsState::Render(sf::RenderWindow& window)
-{
-	rootLayout.Render(window);
-}
+	void StatisticsState::Render(sf::RenderWindow& window)
+	{
+		window.draw(backgroundSprite);
+		rootLayout.Render(window);
+	}

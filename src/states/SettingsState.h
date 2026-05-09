@@ -41,6 +41,8 @@ private:
 	UI::Button* verticalSyncButton = nullptr;
 	UI::Button* blockStyleButton = nullptr;
 
+	sf::Sprite backgroundSprite;
+
 	SliderSetting frameRateSetting;
 	SliderSetting soundSetting;
 	SliderSetting musicSetting;

@@ -32,6 +32,9 @@ private:
 	std::vector<MenuButton> buttons;
 	int selectedIndex = 0;
 
+	sf::Sprite backgroundSprite;
+	sf::Sprite titleBackgroundSprite;
+
 	void CreateMenuButton(const sf::String& text, MenuAction action);
 
 	void SelectPreviousMenuItem();

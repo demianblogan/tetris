@@ -165,26 +165,62 @@ void GameState::Update(float deltaTime)
 void GameState::Render(sf::RenderWindow& window)
 {
 	// =====================================================
-	// Render board background
+	// Render board background tiles
 	// =====================================================
 
-	sf::RectangleShape boardBackground;
-
-	boardBackground.setPosition(BOARD_POSITION);
-	boardBackground.setSize(
-		{
-			Board::WIDTH * BLOCK_SIZE,
-			Board::HEIGHT * BLOCK_SIZE
-		}
-	);
-	boardBackground.setFillColor(sf::Color(0, 70, 70));
-
-	window.draw(boardBackground);
+	constexpr int SPRITE_SIZE = 16;
 
 	sf::Sprite blockSprite(context.textures.Get(GetBlockTextureID()));
-	blockSprite.setScale({ BLOCK_SIZE / 16.f, BLOCK_SIZE / 16.f });
 
-	constexpr int SPRITE_SIZE = 16;
+	blockSprite.setScale(
+		{
+			BLOCK_SIZE / 16.f,
+			BLOCK_SIZE / 16.f
+		}
+	);
+
+	blockSprite.setTextureRect(
+		{
+			{ WALL_TEXTURE_INDEX * SPRITE_SIZE, 0 },
+			{ SPRITE_SIZE, SPRITE_SIZE }
+		}
+	);
+
+	for (int y = 0; y < Board::HEIGHT; y++)
+	{
+		// =================================================
+		// Gradient
+		// =================================================
+
+		const float t =
+			static_cast<float>(y)
+			/ (Board::HEIGHT - 1);
+
+		const int  brightness = static_cast<int>(6 + t * 18);
+
+		// Холодный sci-fi оттенок
+		blockSprite.setColor(
+			sf::Color(
+				brightness / 2,
+				brightness,
+				brightness + 20
+			)
+		);
+
+		for (int x = 0; x < Board::WIDTH; x++)
+		{
+			blockSprite.setPosition(
+				{
+					BOARD_POSITION.x + x * BLOCK_SIZE,
+					BOARD_POSITION.y + y * BLOCK_SIZE
+				}
+			);
+
+			window.draw(blockSprite);
+		}
+	}
+
+	blockSprite.setColor(sf::Color::White);
 
 	// =====================================================
 	// Render walls
@@ -206,18 +242,17 @@ void GameState::Render(sf::RenderWindow& window)
 				BOARD_POSITION.y + y * BLOCK_SIZE
 			}
 		);
+
 		window.draw(blockSprite);
 
 		// Right wall
 		blockSprite.setPosition(
 			{
-				BOARD_POSITION.x
-				+ Board::WIDTH * BLOCK_SIZE,
-
-				BOARD_POSITION.y
-				+ y * BLOCK_SIZE
+				BOARD_POSITION.x + Board::WIDTH * BLOCK_SIZE,
+				BOARD_POSITION.y + y * BLOCK_SIZE
 			}
 		);
+
 		window.draw(blockSprite);
 	}
 
@@ -230,6 +265,7 @@ void GameState::Render(sf::RenderWindow& window)
 				BOARD_POSITION.y + Board::HEIGHT * BLOCK_SIZE
 			}
 		);
+
 		window.draw(blockSprite);
 	}
 
@@ -250,23 +286,40 @@ void GameState::Render(sf::RenderWindow& window)
 				continue;
 			}
 
-			const int textureX = static_cast<int>(cell.tetrominoType) * SPRITE_SIZE;
+			const int textureX =
+				static_cast<int>(cell.tetrominoType)
+				* SPRITE_SIZE;
 
-			blockSprite.setTextureRect({ { textureX, 0 }, { SPRITE_SIZE, SPRITE_SIZE } });
-			blockSprite.setPosition({ BOARD_POSITION.x + x * BLOCK_SIZE, BOARD_POSITION.y + y * BLOCK_SIZE });
+			blockSprite.setTextureRect(
+				{
+					{ textureX, 0 },
+					{ SPRITE_SIZE, SPRITE_SIZE }
+				}
+			);
+
+			blockSprite.setPosition(
+				{
+					BOARD_POSITION.x + x * BLOCK_SIZE,
+					BOARD_POSITION.y + y * BLOCK_SIZE
+				}
+			);
 
 			window.draw(blockSprite);
 		}
 	}
 
 	// =====================================================
-// Render ghost tetromino
-// =====================================================
+	// Render ghost tetromino
+	// =====================================================
 
 	const Tetromino ghostTetromino = GetGhostTetromino();
-	const auto ghostBlockPositions = ghostTetromino.GetBlockPositions();
 
-	const int ghostTextureX = static_cast<int>(ghostTetromino.GetType()) * SPRITE_SIZE;
+	const auto ghostBlockPositions =
+		ghostTetromino.GetBlockPositions();
+
+	const int ghostTextureX =
+		static_cast<int>(ghostTetromino.GetType())
+		* SPRITE_SIZE;
 
 	blockSprite.setTextureRect(
 		{
@@ -275,14 +328,15 @@ void GameState::Render(sf::RenderWindow& window)
 		}
 	);
 
-	blockSprite.setColor(sf::Color(180, 180, 180, 120));
+	blockSprite.setColor(
+		sf::Color(255, 255, 255, 80)
+	);
 
 	for (const sf::Vector2i& blockPosition : ghostBlockPositions)
 	{
 		blockSprite.setPosition(
 			{
 				BOARD_POSITION.x + blockPosition.x * BLOCK_SIZE,
-
 				BOARD_POSITION.y + blockPosition.y * BLOCK_SIZE
 			}
 		);
@@ -296,11 +350,19 @@ void GameState::Render(sf::RenderWindow& window)
 	// Render current tetromino
 	// =====================================================
 
-	const auto blockPositions = currentTetromino.GetBlockPositions();
+	const auto blockPositions =
+		currentTetromino.GetBlockPositions();
 
-	const int textureX = static_cast<int>(currentTetromino.GetType()) * SPRITE_SIZE;
+	const int textureX =
+		static_cast<int>(currentTetromino.GetType())
+		* SPRITE_SIZE;
 
-	blockSprite.setTextureRect({ { textureX, 0 }, { SPRITE_SIZE, SPRITE_SIZE } });
+	blockSprite.setTextureRect(
+		{
+			{ textureX, 0 },
+			{ SPRITE_SIZE, SPRITE_SIZE }
+		}
+	);
 
 	for (const sf::Vector2i& blockPosition : blockPositions)
 	{
@@ -324,8 +386,12 @@ void GameState::Render(sf::RenderWindow& window)
 	// Render next tetromino preview
 	// =====================================================
 
-	const auto previewBlockPositions = nextTetromino.GetBlockPositions();
-	const int previewTextureX = static_cast<int>(nextTetromino.GetType()) * SPRITE_SIZE;
+	const auto previewBlockPositions =
+		nextTetromino.GetBlockPositions();
+
+	const int previewTextureX =
+		static_cast<int>(nextTetromino.GetType())
+		* SPRITE_SIZE;
 
 	blockSprite.setTextureRect(
 		{

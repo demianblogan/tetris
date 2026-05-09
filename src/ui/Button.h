@@ -74,6 +74,8 @@ namespace UI
 		void SetNormalStyle(Style style);
 		void SetSelectedStyle(Style style);
 
+		void SetPreferredSize(sf::Vector2f size);
+
 		[[nodiscard]] sf::Vector2f Measure() const override;
 		void Arrange(sf::Vector2f position, sf::Vector2f size) override;
 

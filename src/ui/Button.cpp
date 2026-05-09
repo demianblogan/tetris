@@ -84,6 +84,11 @@ namespace UI
 		UpdateVisualState();
 	}
 
+	void Button::SetPreferredSize(sf::Vector2f size)
+	{
+		preferredSize = size;
+	}
+
 	sf::Vector2f Button::Measure() const
 	{
 		if (preferredSize.x > 0.f || preferredSize.y > 0.f)
@@ -144,14 +149,6 @@ namespace UI
 
 	void Button::Render(sf::RenderWindow& window) const
 	{
-		sf::RectangleShape rect(size);
-		rect.setPosition(position);
-		rect.setFillColor(backgroundColor);
-		rect.setOutlineColor(outlineColor);
-		rect.setOutlineThickness(outlineThickness);
-
-		window.draw(rect);
-
 		if (backgroundSprite)
 		{
 			sf::Sprite sprite = *backgroundSprite;
@@ -161,10 +158,27 @@ namespace UI
 			if (bounds.size.x > 0.f && bounds.size.y > 0.f)
 			{
 				sprite.setPosition(position);
-				sprite.setScale({ size.x / bounds.size.x, size.y / bounds.size.y });
+				sprite.setScale(
+					{
+						size.x / bounds.size.x,
+						size.y / bounds.size.y
+					}
+				);
+
+				sprite.setColor(backgroundColor);
 
 				window.draw(sprite);
 			}
+		}
+		else
+		{
+			sf::RectangleShape rect(size);
+			rect.setPosition(position);
+			rect.setFillColor(backgroundColor);
+			rect.setOutlineColor(outlineColor);
+			rect.setOutlineThickness(outlineThickness);
+
+			window.draw(rect);
 		}
 
 		if (label)

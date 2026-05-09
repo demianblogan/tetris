@@ -30,7 +30,11 @@ namespace Assets
 	enum class TextureID
 	{
 		BlockSpritesheetWithOutline,
-		BlockSpritesheetWithoutOutline
+		BlockSpritesheetWithoutOutline,
+		ButtonBackground,
+		MenuBackground,
+		TitleBackground,
+		PanelBackground
 	};
 
 	namespace Paths
@@ -64,6 +68,10 @@ namespace Assets
 		{
 			inline constexpr const char* BlockSpritesheetWithOutline = "assets/sprites/block_spritesheet_with_outline.png";
 			inline constexpr const char* BlockSpritesheetWithoutOutline = "assets/sprites/block_spritesheet_without_outline.png";
+			inline constexpr const char* ButtonBackground = "assets/sprites/button_background.png";
+			inline constexpr const char* MenuBackground = "assets/sprites/menu_background.png";
+			inline constexpr const char* TitleBackground = "assets/sprites/title_background.png";
+			inline constexpr const char* PanelBackground = "assets/sprites/panel_background.png";
 		}
 	}
 }

@@ -7,6 +7,7 @@
 #include "../ui/Layout.h"
 #include "../ui/Label.h"
 #include "../ui/Spacer.h"
+#include <SFML/Graphics/Sprite.hpp>
 
 class StatisticsState final : public State
 {
@@ -16,6 +17,8 @@ private:
 	HighScoreManager highScoreManager;
 	UI::Layout rootLayout;
 	std::array<UI::Label*, HighScoreManager::MAX_RECORDS> scoreLabels{};
+
+	sf::Sprite backgroundSprite;
 
 	void UpdateScoreLabels();
 	void UpdateLayout();

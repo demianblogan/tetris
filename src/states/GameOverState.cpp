@@ -64,19 +64,21 @@ GameOverState::GameOverState(Context& context, int finalScore)
 	// =====================================================
 	// Menu layout
 	// =====================================================
-	{
-		auto layout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
-		layout->SetGap(MenuGap);
-		layout->SetHorizontalAlignment(UI::Layout::Alignment::Center);
-		menuLayout = layout.get();
-		rootLayout.Add(std::move(layout));
-	}
+
+	auto menuLayoutElement = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
+	menuLayoutElement->SetGap(MenuGap);
+	menuLayoutElement->SetHorizontalAlignment(UI::Layout::Alignment::Center);
+	menuLayout = menuLayoutElement.get();
+
+	// =====================================================
+	// High score UI
+	// =====================================================
 
 	if (isHighScore)
 	{
-		// =====================================================
+		// =================================================
 		// High score label
-		// =====================================================
+		// =================================================
 		{
 			auto label = std::make_unique<UI::Label>(
 				context.fonts.Get(Assets::FontID::Main),
@@ -88,18 +90,18 @@ GameOverState::GameOverState(Context& context, int finalScore)
 			rootLayout.Add(std::move(label));
 		}
 
-		// =====================================================
+		// =================================================
 		// Name input layout
-		// =====================================================
+		// =================================================
 		{
 			auto layout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Horizontal);
 			layout->SetGap(20.f);
 			layout->SetHorizontalAlignment(UI::Layout::Alignment::Center);
 			layout->SetVerticalAlignment(UI::Layout::Alignment::End);
 
-			// =================================================
+			// =============================================
 			// Enter name label
-			// =================================================
+			// =============================================
 			{
 				auto label = std::make_unique<UI::Label>(
 					context.fonts.Get(Assets::FontID::Main),
@@ -110,16 +112,15 @@ GameOverState::GameOverState(Context& context, int finalScore)
 				layout->Add(std::move(label));
 			}
 
-			// =================================================
+			// =============================================
 			// Player name label
-			// =================================================
+			// =============================================
 			{
 				auto label = std::make_unique<UI::Label>(
 					context.fonts.Get(Assets::FontID::Main),
 					"_",
 					70
 				);
-
 				label->SetFillColor(sf::Color::White);
 				playerNameLabel = label.get();
 				layout->Add(std::move(label));
@@ -129,18 +130,21 @@ GameOverState::GameOverState(Context& context, int finalScore)
 		}
 
 		CreateMenuButton("Save", MenuAction::SaveRecord);
+		rootLayout.Add(std::move(menuLayoutElement));
 	}
 	else
 	{
 		CreateMenuButton("Restart", MenuAction::RestartGame);
 		CreateMenuButton("Main Menu", MenuAction::MainMenu);
+
+		rootLayout.Add(std::move(menuLayoutElement));
 	}
 
 	UpdateSelection();
+	UpdateSaveButtonState();
 	UpdateLayout();
 
 	context.music.Get(Assets::MusicID::Gameplay).stop();
-
 	sf::Music& music = context.music.Get(Assets::MusicID::GameOver);
 	if (music.getStatus() != sf::Music::Status::Playing)
 	{
@@ -198,15 +202,23 @@ void GameOverState::ProcessEvents(sf::RenderWindow& window)
 					playerName.erase(playerName.getSize() - 1, 1);
 				}
 			}
-			else if (character >= 32 && character != 127) // Printable characters
+			else if (character >= 32 && character != 127)
 			{
-				if (playerName.getSize() < MAX_NAME_LENGTH)
+				if (playerName.getSize() >= MAX_NAME_LENGTH)
 				{
-					playerName += character;
+					continue;
 				}
+
+				if (character == U' ' && playerName.isEmpty())
+				{
+					continue;
+				}
+
+				playerName += character;
 			}
 
 			playerNameLabel->SetString(playerName + "_");
+			UpdateSaveButtonState();
 		}
 	}
 }
@@ -238,35 +250,45 @@ void GameOverState::Render(sf::RenderWindow& window)
 
 void GameOverState::CreateMenuButton(const sf::String& text, MenuAction action)
 {
-	auto button = std::make_unique<UI::Button>(
-		sf::Vector2f
-		{
-			ButtonWidth,
-			ButtonHeight
-		}
-	);
+	sf::Sprite buttonSprite(context.textures.Get(Assets::TextureID::ButtonBackground));
 
-	button->SetLabel(std::make_unique<UI::Label>(
-		context.fonts.Get(Assets::FontID::Main),
-		text,
-		ButtonTextSize)
-	);
+	auto button = std::make_unique<UI::Button>(buttonSprite);
+	button->SetPreferredSize({ ButtonWidth,	ButtonHeight });
+	button->SetWidthPixels(ButtonWidth);
+	button->SetHeightPixels(ButtonHeight);
+	button->SetLabel(std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), text, ButtonTextSize));
 
-	button->SetNormalStyle(
-		{
-			.backgroundColor = sf::Color(60, 60, 60),
-			.textColor = sf::Color::White
-		}
-	);
+	if (action == MenuAction::SaveRecord)
+	{
+		button->SetNormalStyle(
+			{
+				.backgroundColor = sf::Color(80, 80, 80),
+				.textColor = sf::Color(100, 100, 100)
+			}
+		);
+	}
+	else
+	{
+		button->SetNormalStyle(
+			{
+				.backgroundColor = sf::Color(140, 140, 140),
+				.textColor = sf::Color::White
+			}
+		);
+	}
 
 	button->SetSelectedStyle(
 		{
-			.backgroundColor = sf::Color::White,
-			.textColor = sf::Color::Black
+			.backgroundColor = sf::Color(200, 200, 200),
+			.textColor = sf::Color::Yellow
 		}
 	);
 
 	UI::Button* buttonPointer = button.get();
+	if (action == MenuAction::SaveRecord)
+	{
+		saveButton = buttonPointer;
+	}
 
 	menuLayout->Add(std::move(button));
 
@@ -330,13 +352,42 @@ void GameOverState::ActivateSelectedButton()
 			break;
 		}
 
-		context.highScores.AddRecord({ playerName, finalScore });
+		const sf::String trimmedName = TrimPlayerName(playerName);
+		context.highScores.AddRecord({ trimmedName, finalScore });
 		context.highScores.Save();
 
 		context.stateMachine.ClearStates();
 		context.stateMachine.PushState(std::make_unique<MainMenuState>(context));
 		break;
 	}
+}
+
+void GameOverState::UpdateSaveButtonState()
+{
+	if (saveButton == nullptr)
+	{
+		return;
+	}
+
+	saveButton->SetSelected(IsPlayerNameValid());
+}
+
+sf::String GameOverState::TrimPlayerName(const sf::String& string) const
+{
+	std::size_t start = 0;
+	std::size_t end = string.getSize();
+
+	while (start < end && string[start] == U' ')
+	{
+		start++;
+	}
+
+	while (end > start && string[end - 1] == U' ')
+	{
+		end--;
+	}
+
+	return string.substring(start, end - start);
 }
 
 bool GameOverState::IsPlayerNameValid() const

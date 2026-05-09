@@ -23,7 +23,14 @@ namespace
 MainMenuState::MainMenuState(Context& context)
 	: context(context)
 	, rootLayout(UI::Layout::Orientation::Vertical)
+	, backgroundSprite(context.textures.Get(Assets::TextureID::MenuBackground))
+	, titleBackgroundSprite(context.textures.Get(Assets::TextureID::TitleBackground))
 {
+	backgroundSprite.setColor(sf::Color(255, 255, 255, 180));
+
+	titleBackgroundSprite.setScale({ 0.6f, 0.45f });
+	titleBackgroundSprite.setPosition({ 565.f, 30.f });
+
 	rootLayout.SetHorizontalAlignment(UI::Layout::Alignment::Center);
 	rootLayout.SetVerticalAlignment(UI::Layout::Alignment::Start);
 	rootLayout.SetGap(0.f);
@@ -96,16 +103,18 @@ MainMenuState::MainMenuState(Context& context)
 
 void MainMenuState::CreateMenuButton(const sf::String& text, MenuAction action)
 {
-	auto button = std::make_unique<UI::Button>(sf::Vector2f{ ButtonWidth, ButtonHeight });
+	sf::Sprite buttonSprite(context.textures.Get(Assets::TextureID::ButtonBackground));
 
+	auto button = std::make_unique<UI::Button>(buttonSprite);
 	button->SetLabel(std::make_unique<UI::Label>(
 		context.fonts.Get(Assets::FontID::Main),
 		text,
 		ButtonTextSize)
 	);
-
-	button->SetNormalStyle({ .backgroundColor = sf::Color(60, 60, 60), .textColor = sf::Color::White });
-	button->SetSelectedStyle({ .backgroundColor = sf::Color::White,	.textColor = sf::Color::Black });
+	button->SetWidthPixels(ButtonWidth);
+	button->SetHeightPixels(ButtonHeight);
+	button->SetNormalStyle({ .backgroundColor = sf::Color(140, 140, 140), .textColor = sf::Color::White });
+	button->SetSelectedStyle({ .backgroundColor = sf::Color(200, 200, 200),	.textColor = sf::Color::Yellow });
 
 	UI::Button* buttonPointer = button.get();
 	menuLayout->Add(std::move(button));
@@ -177,6 +186,9 @@ void MainMenuState::Update(float deltaTime)
 
 void MainMenuState::Render(sf::RenderWindow& window)
 {
+	window.draw(backgroundSprite);
+	window.draw(titleBackgroundSprite);
+
 	rootLayout.Render(window);
 }
 

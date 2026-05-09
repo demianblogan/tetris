@@ -46,9 +46,14 @@ Game::Game()
 	window.setView(gameView);
 
 	fonts.Load(Assets::FontID::Main, Assets::Paths::Fonts::Main);
+
 	textures.Load(Assets::TextureID::BlockSpritesheetWithOutline, Assets::Paths::Textures::BlockSpritesheetWithOutline);
 	textures.Load(Assets::TextureID::BlockSpritesheetWithoutOutline, Assets::Paths::Textures::BlockSpritesheetWithoutOutline);
-	
+	textures.Load(Assets::TextureID::ButtonBackground, Assets::Paths::Textures::ButtonBackground);
+	textures.Load(Assets::TextureID::MenuBackground, Assets::Paths::Textures::MenuBackground);
+	textures.Load(Assets::TextureID::TitleBackground, Assets::Paths::Textures::TitleBackground);
+	textures.Load(Assets::TextureID::PanelBackground, Assets::Paths::Textures::PanelBackground);
+
 	music.Load(Assets::MusicID::MainMenu, Assets::Paths::Music::MainMenu);
 	music.Load(Assets::MusicID::Gameplay, Assets::Paths::Music::Gameplay);
 	music.Load(Assets::MusicID::GameOver, Assets::Paths::Music::GameOver);

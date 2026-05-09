@@ -34,7 +34,10 @@ namespace
 SettingsState::SettingsState(Context& context)
 	: context(context)
 	, rootLayout(UI::Layout::Orientation::Vertical)
+	, backgroundSprite(context.textures.Get(Assets::TextureID::MenuBackground))
 {
+	backgroundSprite.setColor(sf::Color(255, 255, 255, 180));
+
 	rootLayout.SetHorizontalAlignment(UI::Layout::Alignment::Center);
 	rootLayout.SetVerticalAlignment(UI::Layout::Alignment::Start);
 	rootLayout.SetGap(0.f);
@@ -594,5 +597,6 @@ void SettingsState::Update(float deltaTime)
 
 void SettingsState::Render(sf::RenderWindow& window)
 {
+	window.draw(backgroundSprite);
 	rootLayout.Render(window);
 }
