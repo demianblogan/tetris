@@ -11,7 +11,8 @@ Context::Context(
     SoundBufferManager& soundBuffers,
     TextureManager& textures,
     AudioPlayer& audioPlayer,
-    SettingsManager& settings
+    SettingsManager& settings,
+    HighScoreManager& highScores
 )
     : stateMachine(stateMachine)
     , window(window)
@@ -21,6 +22,7 @@ Context::Context(
     , textures(textures)
     , audioPlayer(audioPlayer)
     , settings(settings)
+    , highScores(highScores)
 {
 	// No code
 }

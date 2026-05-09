@@ -6,6 +6,7 @@
 class AudioPlayer;
 class StateMachine;
 class SettingsManager;
+class HighScoreManager;
 
 struct Context
 {
@@ -18,6 +19,7 @@ struct Context
     SoundBufferManager& soundBuffers;
     TextureManager& textures;
     SettingsManager& settings;
+    HighScoreManager& highScores;
     AudioPlayer& audioPlayer;
 
     Context(
@@ -28,6 +30,7 @@ struct Context
         SoundBufferManager& soundBuffers,
         TextureManager& textures,
         AudioPlayer& audioPlayer,
-        SettingsManager& settings
+        SettingsManager& settings,
+        HighScoreManager& highScores
     );
 };

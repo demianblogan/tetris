@@ -580,7 +580,6 @@ void SettingsState::ProcessEvents(sf::RenderWindow& window)
 				break;
 
 			case sf::Keyboard::Scancode::Enter:
-			case sf::Keyboard::Scancode::Space:
 				ActivateCurrentElement();
 				break;
 			}

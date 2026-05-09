@@ -6,6 +6,7 @@
 #include "../core/StateMachine.h"
 #include "../resources/Assets.h"
 #include "MainMenuState.h"
+#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace
 {

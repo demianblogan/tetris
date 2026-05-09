@@ -39,7 +39,8 @@ Game::Game()
 	, gameView({ VIRTUAL_RESOLUTION / 2.f, VIRTUAL_RESOLUTION })
 	, audioPlayer(soundBuffers)
 	, settings(Data::Paths::Settings)
-	, context(stateMachine, window, fonts, music, soundBuffers, textures, audioPlayer, settings)
+	, context(stateMachine, window, fonts, music, soundBuffers, textures, audioPlayer, settings, highScores)
+	, highScores(Data::Paths::Scores)
 {
 	window.setMouseCursorVisible(false);
 	window.setView(gameView);
@@ -54,6 +55,8 @@ Game::Game()
 
 	settings.Load();
 	settings.Apply(context);
+
+	highScores.Load();
 
 	stateMachine.PushState(std::make_unique<MainMenuState>(context));
 }

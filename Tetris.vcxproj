@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\game\TetrominoBag.cpp" />
+    <ClCompile Include="src\states\GameOverState.cpp" />
     <ClCompile Include="src\states\PauseState.cpp" />
     <ClCompile Include="src\utils\Random.cpp" />
     <ClCompile Include="src\audio\AudioPlayer.cpp" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\TetrominoBag.h" />
+    <ClInclude Include="src\states\GameOverState.h" />
     <ClInclude Include="src\states\PauseState.h" />
     <ClInclude Include="src\utils\Random.h" />
     <ClInclude Include="src\game\Cell.h" />

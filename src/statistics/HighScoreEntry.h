@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
+#include <SFML/System/String.hpp>
 
 struct HighScoreEntry
 {
-    std::string playerName;
+    sf::String playerName;
     int score = 0;
 };

@@ -20,5 +20,6 @@ public:
 	void AddRecord(const HighScoreEntry& entry);
 	void Clear();
 
+	[[nodiscard]] bool IsHighScore(int score) const;
 	[[nodiscard]] const std::vector<HighScoreEntry>& GetRecords() const;
 };

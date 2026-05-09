@@ -4,6 +4,7 @@
 #include "../audio/AudioPlayer.h"
 #include "../resources/ResourceManager.h"
 #include "../settings/SettingsManager.h"
+#include "../statistics/HighScoreManager.h"
 #include "Context.h"
 #include "StateMachine.h"
 
@@ -22,6 +23,8 @@ private:
 	SoundBufferManager soundBuffers;
 	TextureManager textures;
 	SettingsManager settings;
+	HighScoreManager highScores;
+
 	AudioPlayer audioPlayer;
 
 	Context context;

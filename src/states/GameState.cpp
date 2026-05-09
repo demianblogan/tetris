@@ -13,6 +13,7 @@
 #include <settings/GameSettings.h>
 #include "../settings/SettingsManager.h"
 #include "PauseState.h"
+#include "GameOverState.h"
 
 GameState::GameState(Context& context)
 	: context(context)
@@ -389,7 +390,7 @@ void GameState::HandleTetrominoLanding()
 
 	if (!SpawnTetromino())
 	{
-		context.stateMachine.ChangeState(std::make_unique<MainMenuState>(context));
+		context.stateMachine.ChangeState(std::make_unique<GameOverState>(context, score));
 	}
 }
 

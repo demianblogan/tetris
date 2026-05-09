@@ -93,7 +93,6 @@ void PauseState::ProcessEvents(sf::RenderWindow& window)
 				break;
 
 			case sf::Keyboard::Scancode::Enter:
-			case sf::Keyboard::Scancode::Space:
 				context.audioPlayer.Play(Assets::SoundID::MenuItemPressed);
 				ActivateSelectedButton();
 				break;
