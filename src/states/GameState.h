@@ -41,6 +41,7 @@ private:
 	void TryDropTetromino();
 	void HandleTetrominoLanding();
 
+	[[nodiscard]] Tetromino GetGhostTetromino() const;
 	[[nodiscard]] Assets::TextureID GetBlockTextureID() const;
 
 public:

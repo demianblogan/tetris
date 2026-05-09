@@ -260,6 +260,39 @@ void GameState::Render(sf::RenderWindow& window)
 	}
 
 	// =====================================================
+// Render ghost tetromino
+// =====================================================
+
+	const Tetromino ghostTetromino = GetGhostTetromino();
+	const auto ghostBlockPositions = ghostTetromino.GetBlockPositions();
+
+	const int ghostTextureX = static_cast<int>(ghostTetromino.GetType()) * SPRITE_SIZE;
+
+	blockSprite.setTextureRect(
+		{
+			{ ghostTextureX, 0 },
+			{ SPRITE_SIZE, SPRITE_SIZE }
+		}
+	);
+
+	blockSprite.setColor(sf::Color(180, 180, 180, 120));
+
+	for (const sf::Vector2i& blockPosition : ghostBlockPositions)
+	{
+		blockSprite.setPosition(
+			{
+				BOARD_POSITION.x + blockPosition.x * BLOCK_SIZE,
+
+				BOARD_POSITION.y + blockPosition.y * BLOCK_SIZE
+			}
+		);
+
+		window.draw(blockSprite);
+	}
+
+	blockSprite.setColor(sf::Color::White);
+
+	// =====================================================
 	// Render current tetromino
 	// =====================================================
 
@@ -423,6 +456,27 @@ void GameState::HandleTetrominoLanding()
 	{
 		context.stateMachine.ChangeState(std::make_unique<GameOverState>(context, score));
 	}
+}
+
+Tetromino GameState::GetGhostTetromino() const
+{
+	Tetromino ghostTetromino = currentTetromino;
+
+	while (true)
+	{
+		Tetromino movedTetromino = ghostTetromino;
+
+		movedTetromino.Move(0, 1);
+
+		if (!board.CanPlace(movedTetromino))
+		{
+			break;
+		}
+
+		ghostTetromino = movedTetromino;
+	}
+
+	return ghostTetromino;
 }
 
 Assets::TextureID GameState::GetBlockTextureID() const
