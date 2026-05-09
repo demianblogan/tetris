@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace sf
 {
@@ -40,7 +41,7 @@ namespace UI
 		[[nodiscard]] virtual sf::Vector2f Measure() const = 0;
 		virtual void Arrange(sf::Vector2f position, sf::Vector2f size);
 
-		virtual void Render(sf::RenderWindow& window) const = 0;
+		virtual void Render(sf::RenderTarget& target) const = 0;
 
 		[[nodiscard]] sf::Vector2f GetPosition() const;
 		[[nodiscard]] sf::Vector2f GetSize() const;

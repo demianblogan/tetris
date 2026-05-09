@@ -81,6 +81,6 @@ namespace UI
 
 		[[nodiscard]] bool Contains(sf::Vector2f point) const;
 
-		void Render(sf::RenderWindow& window) const override;
+		void Render(sf::RenderTarget& target) const override;
 	};
 }

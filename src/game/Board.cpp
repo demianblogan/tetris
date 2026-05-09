@@ -105,6 +105,32 @@ int Board::ClearFullRows()
 	return clearedRowsCount;
 }
 
+std::vector<int> Board::GetFullRows() const
+{
+	std::vector<int> rows;
+
+	for (int y = 0; y < HEIGHT; y++)
+	{
+		bool full = true;
+
+		for (int x = 0; x < WIDTH; x++)
+		{
+			if (!grid[y][x].occupied)
+			{
+				full = false;
+				break;
+			}
+		}
+
+		if (full)
+		{
+			rows.push_back(y);
+		}
+	}
+
+	return rows;
+}
+
 const Board::Grid& Board::GetGrid() const
 {
 	return grid;

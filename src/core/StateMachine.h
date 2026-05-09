@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include "State.h"
+#include <SFML/Graphics/RenderTarget.hpp>
 
 class StateMachine
 {
@@ -20,5 +21,7 @@ public:
     void ApplyPendingChanges();
 
     void ClearStates();
-    void RenderStates(sf::RenderWindow& window);
+    void RenderStates(sf::RenderTarget& target);
+    void RenderStatesExceptTop(sf::RenderTarget& target);
+    void RenderTopState(sf::RenderTarget& target);
 };

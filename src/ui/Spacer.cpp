@@ -21,7 +21,7 @@ namespace UI
 		Element::Arrange(position, size);
 	}
 
-	void Spacer::Render(sf::RenderWindow&) const
+	void Spacer::Render(sf::RenderTarget& target) const
 	{
 		// No code
 	}

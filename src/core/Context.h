@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "../resources/ResourceManager.h"
+#include "../resources/ShaderManager.h"
 
 class AudioPlayer;
 class StateMachine;
@@ -21,6 +22,8 @@ struct Context
     SettingsManager& settings;
     HighScoreManager& highScores;
     AudioPlayer& audioPlayer;
+    ShaderManager& shaders;
+    float totalTime = 0.f;
 
     Context(
         StateMachine& stateMachine,
@@ -29,6 +32,7 @@ struct Context
         MusicManager& music,
         SoundBufferManager& soundBuffers,
         TextureManager& textures,
+        ShaderManager& shaders,
         AudioPlayer& audioPlayer,
         SettingsManager& settings,
         HighScoreManager& highScores

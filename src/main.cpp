@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "core/Game.h"
 
 int main()
 {
@@ -9,5 +9,11 @@ int main()
 }
 
 // TODO:
-// 1. Implement letterboxing
-// 2. Disable blurry scaling (when using textures)
+/*
+
+3.
+Tiny particle system
+
+4.
+Subtle animated background
+*/

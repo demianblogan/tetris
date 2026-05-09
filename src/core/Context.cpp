@@ -10,6 +10,7 @@ Context::Context(
     MusicManager& music,
     SoundBufferManager& soundBuffers,
     TextureManager& textures,
+    ShaderManager& shaders,
     AudioPlayer& audioPlayer,
     SettingsManager& settings,
     HighScoreManager& highScores
@@ -20,6 +21,7 @@ Context::Context(
     , music(music)
     , soundBuffers(soundBuffers)
     , textures(textures)
+    , shaders(shaders)
     , audioPlayer(audioPlayer)
     , settings(settings)
     , highScores(highScores)

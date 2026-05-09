@@ -15,6 +15,7 @@
 #include "PauseState.h"
 #include "GameOverState.h"
 #include "../audio/AudioPlayer.h"
+#include <utils/Random.h>
 
 GameState::GameState(Context& context)
 	: context(context)
@@ -103,7 +104,7 @@ GameState::GameState(Context& context)
 			.left = 80.f,
 			.top = 50.f,
 		}
-	);
+		);
 
 	sf::String controlsText =
 		L"[←] [↓] [→] - Move tetromino\n"
@@ -197,6 +198,79 @@ void GameState::ProcessEvents(sf::RenderWindow& window)
 
 void GameState::Update(float deltaTime)
 {
+	// =====================================================
+	// Clear row effect
+	// =====================================================
+
+	if (IsPlayingClearRowEffect())
+	{
+		for (ClearRowEffect& effect : clearRowEffects)
+		{
+			effect.timer += deltaTime;
+		}
+
+		bool finished = true;
+
+		for (const ClearRowEffect& effect : clearRowEffects)
+		{
+			if (effect.timer < CLEAR_ROW_EFFECT_DURATION)
+			{
+				finished = false;
+				break;
+			}
+		}
+
+		if (finished)
+		{
+			const int clearedRows = static_cast<int>(clearRowEffects.size());
+			board.ClearFullRows();
+			score += clearedRows * 10;
+
+			const int previousLevel = level;
+			level = score / SCORE_PER_LEVEL + 1;
+			if (level > previousLevel)
+			{
+				context.audioPlayer.Play(Assets::SoundID::NextLevel);
+			}
+
+			fallDelay = std::max(0.1f, 0.5f - (level - 1) * 0.05f);
+
+			scoreLabel->SetString("Score: " + std::to_string(score));
+			levelLabel->SetString("Level: " + std::to_string(level));
+
+			clearRowEffects.clear();
+
+			if (!SpawnTetromino())
+			{
+				context.stateMachine.ChangeState(std::make_unique<GameOverState>(context, score));
+			}
+		}
+
+		return;
+	}
+
+	// =====================================================
+	// Landing effect
+	// =====================================================
+
+	if (landingEffectTimer > 0.f)
+	{
+		landingEffectTimer -= deltaTime;
+	}
+
+	// =====================================================
+	// Screen shake
+	// =====================================================
+
+	if (shakeTimer > 0.f)
+	{
+		shakeTimer -= deltaTime;
+	}
+
+	// =====================================================
+	// Normal gameplay update
+	// =====================================================
+
 	fallTimer += deltaTime;
 
 	if (fallTimer >= fallDelay)
@@ -218,9 +292,27 @@ void GameState::Update(float deltaTime)
 	}
 }
 
-void GameState::Render(sf::RenderWindow& window)
+void GameState::Render(sf::RenderTarget& target)
 {
-	window.draw(backgroundSprite);
+	sf::View shakenView = target.getView();
+
+	if (shakeTimer > 0.f)
+	{
+		const float currentIntensity = shakeIntensity * (shakeTimer / shakeDuration);
+
+		const float offsetX = Random::Float(-currentIntensity, currentIntensity);
+		const float offsetY = Random::Float(-currentIntensity, currentIntensity);
+
+		shakenView.move({ offsetX, offsetY });
+	}
+
+	target.setView(shakenView);
+
+	// =====================================================
+	// Render background
+	// =====================================================
+
+	target.draw(backgroundSprite);
 
 	// =====================================================
 	// Render board background tiles
@@ -274,7 +366,7 @@ void GameState::Render(sf::RenderWindow& window)
 				}
 			);
 
-			window.draw(blockSprite);
+			target.draw(blockSprite);
 		}
 	}
 
@@ -301,7 +393,7 @@ void GameState::Render(sf::RenderWindow& window)
 			}
 		);
 
-		window.draw(blockSprite);
+		target.draw(blockSprite);
 
 		// Right wall
 		blockSprite.setPosition(
@@ -311,7 +403,7 @@ void GameState::Render(sf::RenderWindow& window)
 			}
 		);
 
-		window.draw(blockSprite);
+		target.draw(blockSprite);
 	}
 
 	// Bottom wall
@@ -324,7 +416,7 @@ void GameState::Render(sf::RenderWindow& window)
 			}
 		);
 
-		window.draw(blockSprite);
+		target.draw(blockSprite);
 	}
 
 	// =====================================================
@@ -362,8 +454,59 @@ void GameState::Render(sf::RenderWindow& window)
 				}
 			);
 
-			window.draw(blockSprite);
+			target.draw(blockSprite);
 		}
+	}
+
+	// =====================================================
+	// Render clear row effects
+	// =====================================================
+
+	for (const ClearRowEffect& effect : clearRowEffects)
+	{
+		// =====================================================
+		// Render flash effect
+		// =====================================================
+
+		const float t = effect.timer / CLEAR_ROW_EFFECT_DURATION;
+
+		const int alpha = static_cast<int>((1.f - t) * 255.f);
+
+		sf::RectangleShape flash;
+		flash.setPosition(
+			{
+				BOARD_POSITION.x,
+				BOARD_POSITION.y + effect.row * BLOCK_SIZE
+			}
+		);
+		flash.setSize(
+			{
+				Board::WIDTH * BLOCK_SIZE,
+				BLOCK_SIZE
+			}
+		);
+		flash.setFillColor(sf::Color(120, 220, 255, alpha));
+
+		target.draw(flash);
+
+		// =====================================================
+		// Render sweep effect
+		// =====================================================
+
+		const float sweepWidth = 120.f;
+		const float sweepX = -sweepWidth + t * (Board::WIDTH * BLOCK_SIZE + sweepWidth * 2.f);
+
+		sf::RectangleShape sweep;
+		sweep.setPosition(
+			{
+				BOARD_POSITION.x + sweepX,
+				BOARD_POSITION.y + effect.row * BLOCK_SIZE
+			}
+		);
+		sweep.setSize({ sweepWidth,	BLOCK_SIZE });
+		sweep.setFillColor(sf::Color(180, 255, 255, alpha));
+
+		target.draw(sweep);
 	}
 
 	// =====================================================
@@ -386,10 +529,6 @@ void GameState::Render(sf::RenderWindow& window)
 		}
 	);
 
-	blockSprite.setColor(
-		sf::Color(255, 255, 255, 80)
-	);
-
 	for (const sf::Vector2i& blockPosition : ghostBlockPositions)
 	{
 		blockSprite.setPosition(
@@ -399,10 +538,33 @@ void GameState::Render(sf::RenderWindow& window)
 			}
 		);
 
-		window.draw(blockSprite);
+		sf::Shader& ghostShader = context.shaders.Get(Assets::ShaderID::GhostTetromino);
+		ghostShader.setUniform("time", context.totalTime);
+		target.draw(blockSprite, &ghostShader);
 	}
 
-	blockSprite.setColor(sf::Color::White);
+	// Adding landing effect:
+
+	if (landingEffectTimer > 0.f)
+	{
+		const float alpha = landingEffectTimer / LANDING_EFFECT_DURATION;
+
+		blockSprite.setColor(sf::Color(255, 255, 255, static_cast<std::uint8_t>(alpha * 120.f)));
+
+		for (const sf::Vector2i& blockPosition : landingEffectBlocks)
+		{
+			blockSprite.setPosition(
+				{
+					BOARD_POSITION.x + blockPosition.x * BLOCK_SIZE,
+					BOARD_POSITION.y + blockPosition.y * BLOCK_SIZE
+				}
+			);
+
+			target.draw(blockSprite);
+		}
+
+		blockSprite.setColor(sf::Color::White);
+	}
 
 	// =====================================================
 	// Render current tetromino
@@ -422,6 +584,66 @@ void GameState::Render(sf::RenderWindow& window)
 		}
 	);
 
+	// =====================================================
+	// Glow pass
+	// =====================================================
+
+	const float glowScale = 1.18f;
+
+	blockSprite.setScale(
+		{
+			(BLOCK_SIZE / 16.f) * glowScale,
+			(BLOCK_SIZE / 16.f) * glowScale
+		}
+	);
+
+	blockSprite.setColor(
+		sf::Color(255, 255, 255, 50)
+	);
+
+	const float glowOffset =
+		(BLOCK_SIZE * glowScale - BLOCK_SIZE) / 2.f;
+
+	sf::Shader& glowShader =
+		context.shaders.Get(Assets::ShaderID::Glow);
+
+	glowShader.setUniform(
+		"time",
+		context.totalTime
+	);
+
+	sf::RenderStates glowStates;
+	glowStates.blendMode = sf::BlendAdd;
+	glowStates.shader = &glowShader;
+
+	for (const sf::Vector2i& blockPosition : blockPositions)
+	{
+		blockSprite.setPosition(
+			{
+				BOARD_POSITION.x + blockPosition.x * BLOCK_SIZE - glowOffset,
+				BOARD_POSITION.y + blockPosition.y * BLOCK_SIZE - glowOffset
+			}
+		);
+
+		target.draw(
+			blockSprite,
+			glowStates
+		);
+	}
+
+	// =====================================================
+	// Normal pass
+	// =====================================================
+
+	blockSprite.setScale(
+		{
+			BLOCK_SIZE / 16.f,
+			BLOCK_SIZE / 16.f
+		}
+	);
+
+	blockSprite.setColor(sf::Color::White);
+
 	for (const sf::Vector2i& blockPosition : blockPositions)
 	{
 		blockSprite.setPosition(
@@ -431,15 +653,15 @@ void GameState::Render(sf::RenderWindow& window)
 			}
 		);
 
-		window.draw(blockSprite);
+		target.draw(blockSprite);
 	}
 
 	// =====================================================
 	// Render UI
 	// =====================================================
 
-	rightHudLayout->Render(window);
-	controlsPanel->Render(window);
+	rightHudLayout->Render(target);
+	controlsPanel->Render(target);
 
 	// =====================================================
 	// Render next tetromino preview
@@ -477,8 +699,20 @@ void GameState::Render(sf::RenderWindow& window)
 			}
 		);
 
-		window.draw(blockSprite);
+		target.draw(blockSprite);
 	}
+}
+
+void GameState::StartScreenShake(float duration, float intensity)
+{
+	shakeDuration = duration;
+	shakeTimer = duration;
+	shakeIntensity = intensity;
+}
+
+bool GameState::IsPlayingClearRowEffect() const
+{
+	return !clearRowEffects.empty();
 }
 
 bool GameState::SpawnTetromino()
@@ -540,6 +774,7 @@ void GameState::TryDropTetromino()
 	}
 
 	context.audioPlayer.Play(Assets::SoundID::DropPiece);
+	StartScreenShake(0.12f, 12.f);
 
 	board.LockTetromino(currentTetromino);
 	HandleTetrominoLanding();
@@ -549,27 +784,32 @@ void GameState::TryDropTetromino()
 
 void GameState::HandleTetrominoLanding()
 {
+	landingEffectBlocks = currentTetromino.GetBlockPositions();
+	landingEffectTimer = LANDING_EFFECT_DURATION;
+
 	board.LockTetromino(currentTetromino);
 
-	const int clearedRows = board.ClearFullRows();
-	if (clearedRows != 0)
+	const std::vector<int> fullRows = board.GetFullRows();
+
+	// =====================================================
+	// Clear row effect
+	// =====================================================
+
+	if (!fullRows.empty())
 	{
 		context.audioPlayer.Play(Assets::SoundID::RowCleared);
+
+		for (int row : fullRows)
+		{
+			clearRowEffects.push_back({ .row = row, .timer = 0.f });
+		}
+
+		return;
 	}
 
-	score += clearedRows * 10;
-
-	const int previousLevel = level;
-	level = score / SCORE_PER_LEVEL + 1;
-	if (level > previousLevel)
-	{
-		context.audioPlayer.Play(Assets::SoundID::NextLevel);
-	}
-
-	fallDelay = std::max(0.1f, 0.5f - (level - 1) * 0.05f);
-
-	scoreLabel->SetString("Score: " + std::to_string(score));
-	levelLabel->SetString("Level: " + std::to_string(level));
+	// =====================================================
+	// No cleared rows
+	// =====================================================
 
 	if (!SpawnTetromino())
 	{

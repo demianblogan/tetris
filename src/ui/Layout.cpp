@@ -276,19 +276,19 @@ namespace UI
 		}
 	}
 
-	void Layout::Render(sf::RenderWindow& window) const
+	void Layout::Render(sf::RenderTarget& target) const
 	{
 		if (backgroundColor != sf::Color::Transparent)
 		{
 			sf::RectangleShape rect(size);
 			rect.setPosition(position);
 			rect.setFillColor(backgroundColor);
-			window.draw(rect);
+			target.draw(rect);
 		}
 
 		for (const auto& child : children)
 		{
-			child->Render(window);
+			child->Render(target);
 		}
 	}
 }

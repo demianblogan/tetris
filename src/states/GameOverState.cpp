@@ -228,7 +228,7 @@ void GameOverState::Update(float deltaTime)
 	// No code
 }
 
-void GameOverState::Render(sf::RenderWindow& window)
+void GameOverState::Render(sf::RenderTarget& target)
 {
 	// =====================================================
 	// Background overlay
@@ -236,16 +236,16 @@ void GameOverState::Render(sf::RenderWindow& window)
 
 	sf::RectangleShape overlay;
 	overlay.setPosition({ 0.f, 0.f });
-	overlay.setSize(window.getView().getSize());
+	overlay.setSize(target.getView().getSize());
 	overlay.setFillColor(sf::Color(0, 0, 0, 220));
 
-	window.draw(overlay);
+	target.draw(overlay);
 
 	// =====================================================
 	// UI
 	// =====================================================
 
-	rootLayout.Render(window);
+	rootLayout.Render(target);
 }
 
 void GameOverState::CreateMenuButton(const sf::String& text, MenuAction action)

@@ -147,7 +147,7 @@ namespace UI
 		return sf::FloatRect(position, size).contains(point);
 	}
 
-	void Button::Render(sf::RenderWindow& window) const
+	void Button::Render(sf::RenderTarget& target) const
 	{
 		if (backgroundSprite)
 		{
@@ -167,7 +167,7 @@ namespace UI
 
 				sprite.setColor(backgroundColor);
 
-				window.draw(sprite);
+				target.draw(sprite);
 			}
 		}
 		else
@@ -178,12 +178,12 @@ namespace UI
 			rect.setOutlineColor(outlineColor);
 			rect.setOutlineThickness(outlineThickness);
 
-			window.draw(rect);
+			target.draw(rect);
 		}
 
 		if (label)
 		{
-			label->Render(window);
+			label->Render(target);
 		}
 	}
 

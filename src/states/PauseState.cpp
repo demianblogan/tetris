@@ -106,7 +106,7 @@ void PauseState::Update(float deltaTime)
 	// No code
 }
 
-void PauseState::Render(sf::RenderWindow& window)
+void PauseState::Render(sf::RenderTarget& target)
 {
 	// =====================================================
 	// Dark overlay
@@ -114,16 +114,16 @@ void PauseState::Render(sf::RenderWindow& window)
 
 	sf::RectangleShape overlay;
 	overlay.setPosition({ 0.f, 0.f });
-	overlay.setSize(window.getView().getSize());
+	overlay.setSize(target.getView().getSize());
 	overlay.setFillColor(sf::Color(0, 0, 0, 180));
 
-	window.draw(overlay);
+	target.draw(overlay);
 
 	// =====================================================
 	// UI
 	// =====================================================
 
-	rootLayout.Render(window);
+	rootLayout.Render(target);
 }
 
 bool PauseState::IsTransparent() const

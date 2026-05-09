@@ -37,7 +37,7 @@ void StateMachine::ClearStates()
 	states.clear();
 }
 
-void StateMachine::RenderStates(sf::RenderWindow& window)
+void StateMachine::RenderStates(sf::RenderTarget& target)
 {
 	if (states.empty())
 	{
@@ -53,8 +53,31 @@ void StateMachine::RenderStates(sf::RenderWindow& window)
 
 	for (int i = startIndex; i < static_cast<int>(states.size()); i++)
 	{
-		states[i]->Render(window);
+		states[i]->Render(target);
 	}
+}
+
+void StateMachine::RenderStatesExceptTop(sf::RenderTarget& target)
+{
+	if (states.size() <= 1)
+	{
+		return;
+	}
+
+	for (std::size_t i = 0; i < states.size() - 1; i++)
+	{
+		states[i]->Render(target);
+	}
+}
+
+void StateMachine::RenderTopState(sf::RenderTarget& target)
+{
+	if (states.empty())
+	{
+		return;
+	}
+
+	states.back()->Render(target);
 }
 
 State* StateMachine::GetCurrentState()

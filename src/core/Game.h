@@ -1,12 +1,16 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
+#include <SFML/Graphics/Shader.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include "../audio/AudioPlayer.h"
 #include "../resources/ResourceManager.h"
 #include "../settings/SettingsManager.h"
 #include "../statistics/HighScoreManager.h"
 #include "Context.h"
 #include "StateMachine.h"
+#include "../resources/ShaderManager.h"
 
 class Game
 {
@@ -14,6 +18,12 @@ private:
 	static constexpr sf::Vector2f VIRTUAL_RESOLUTION{ 1920.f, 1080.f };
 
 	sf::RenderWindow window;
+
+	sf::RenderTexture renderTexture;
+	sf::RenderTexture gameplayTexture;
+	sf::RenderTexture finalTexture;
+	ShaderManager shaders;
+
 	sf::View gameView;
 
 	StateMachine stateMachine;

@@ -48,7 +48,7 @@ namespace UI
 		);
 	}
 
-	void Panel::Render(sf::RenderWindow& window) const
+	void Panel::Render(sf::RenderTarget& target) const
 	{
 		sf::Sprite sprite = backgroundSprite;
 		const sf::FloatRect bounds = sprite.getLocalBounds();
@@ -60,11 +60,11 @@ namespace UI
 			}
 		);
 
-		window.draw(sprite);
+		target.draw(sprite);
 
 		if (child)
 		{
-			child->Render(window);
+			child->Render(target);
 		}
 	}
 }

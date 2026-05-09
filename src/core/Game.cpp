@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include <states/MainMenuState.h>
+#include <states/PauseState.h>
 
 bool Game::IsWindowOpen() const
 {
@@ -17,6 +18,8 @@ void Game::ProcessEvents()
 
 void Game::Update(float deltaTime)
 {
+	context.totalTime += deltaTime;
+
 	if (State* currentState = stateMachine.GetCurrentState())
 	{
 		currentState->Update(deltaTime);
@@ -25,12 +28,63 @@ void Game::Update(float deltaTime)
 
 void Game::Render()
 {
+	sf::Shader& crtShader = context.shaders.Get(Assets::ShaderID::CRT);
+	sf::Shader& blurShader = context.shaders.Get(Assets::ShaderID::Blur);
+
+	State* currentState = stateMachine.GetCurrentState();
+
+	const bool isPause =
+		dynamic_cast<PauseState*>(currentState) != nullptr;
+
+	// =====================================================
+	// NORMAL RENDER
+	// =====================================================
+
+	if (!isPause)
+	{
+		renderTexture.clear();
+		renderTexture.setView(gameView);
+		stateMachine.RenderStates(renderTexture);
+		renderTexture.display();
+
+		sf::Sprite screenSprite(renderTexture.getTexture());
+
+		window.clear();
+		crtShader.setUniform("time", context.totalTime);
+		window.draw(screenSprite, &crtShader);
+		window.display();
+
+		return;
+	}
+
+	// =====================================================
+	// Render gameplay only
+	// =====================================================
+
+	gameplayTexture.clear();
+	gameplayTexture.setView(gameView);
+	stateMachine.RenderStatesExceptTop(gameplayTexture);
+	gameplayTexture.display();
+
+	// =====================================================
+	// Compose final scene
+	// =====================================================
+
+	finalTexture.clear();
+
+	sf::Sprite gameplaySprite(gameplayTexture.getTexture());
+	finalTexture.draw(gameplaySprite, &blurShader);
+	stateMachine.RenderTopState(finalTexture);
+	finalTexture.display();
+
+	// =====================================================
+	// Final CRT pass
+	// =====================================================
+
+	sf::Sprite finalSprite(finalTexture.getTexture());
 	window.clear();
-
-	window.setView(gameView);
-
-	stateMachine.RenderStates(window);
-
+	crtShader.setUniform("time", context.totalTime);
+	window.draw(finalSprite, &crtShader);
 	window.display();
 }
 
@@ -39,11 +93,47 @@ Game::Game()
 	, gameView({ VIRTUAL_RESOLUTION / 2.f, VIRTUAL_RESOLUTION })
 	, audioPlayer(soundBuffers)
 	, settings(Data::Paths::Settings)
-	, context(stateMachine, window, fonts, music, soundBuffers, textures, audioPlayer, settings, highScores)
+	, context(
+		stateMachine,
+		window,
+		fonts,
+		music,
+		soundBuffers,
+		textures,
+		shaders,
+		audioPlayer,
+		settings,
+		highScores)
 	, highScores(Data::Paths::Scores)
 {
 	window.setMouseCursorVisible(false);
 	window.setView(gameView);
+
+	renderTexture.resize(
+		{
+			static_cast<unsigned int>(VIRTUAL_RESOLUTION.x),
+			static_cast<unsigned int>(VIRTUAL_RESOLUTION.y)
+		}
+	);
+
+	gameplayTexture.resize(
+		{
+			static_cast<unsigned int>(VIRTUAL_RESOLUTION.x),
+			static_cast<unsigned int>(VIRTUAL_RESOLUTION.y)
+		}
+	);
+
+	finalTexture.resize(
+		{
+			static_cast<unsigned int>(VIRTUAL_RESOLUTION.x),
+			static_cast<unsigned int>(VIRTUAL_RESOLUTION.y)
+		}
+	);
+
+	shaders.Load(Assets::ShaderID::CRT, Assets::Paths::Shaders::CRT, sf::Shader::Type::Fragment);
+	shaders.Load(Assets::ShaderID::Blur, Assets::Paths::Shaders::Blur, sf::Shader::Type::Fragment);
+	shaders.Load(Assets::ShaderID::Glow, Assets::Paths::Shaders::Glow, sf::Shader::Type::Fragment);
+	shaders.Load(Assets::ShaderID::GhostTetromino, Assets::Paths::Shaders::GhostTetromino, sf::Shader::Type::Fragment);
 
 	fonts.Load(Assets::FontID::Main, Assets::Paths::Fonts::Main);
 

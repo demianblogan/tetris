@@ -49,8 +49,8 @@ namespace UI
 		text.setPosition({ position.x, position.y - bounds.position.y });
 	}
 
-	void Label::Render(sf::RenderWindow& window) const
+	void Label::Render(sf::RenderTarget& target) const
 	{
-		window.draw(text);
+		target.draw(text);
 	}
 }

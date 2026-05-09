@@ -23,6 +23,6 @@ namespace UI
 		[[nodiscard]] sf::Vector2f Measure() const override;
 		void Arrange(sf::Vector2f position, sf::Vector2f size) override;
 
-		void Render(sf::RenderWindow& window) const override;
+		void Render(sf::RenderTarget& target) const override;
 	};
 }

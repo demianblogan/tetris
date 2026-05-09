@@ -13,10 +13,18 @@
 class GameState : public State
 {
 private:
+	struct ClearRowEffect
+	{
+		int row = 0;
+		float timer = 0.f;
+	};
+
 	static constexpr float BLOCK_SIZE = 48.f;
 	static constexpr int WALL_TEXTURE_INDEX = 10;
 	static constexpr sf::Vector2f BOARD_POSITION{ 720.f, 60.f };
 	static constexpr int SCORE_PER_LEVEL = 50;
+	static constexpr float LANDING_EFFECT_DURATION = 0.15f;
+	static constexpr float CLEAR_ROW_EFFECT_DURATION = 0.45f;
 
 	Context& context;
 
@@ -43,6 +51,18 @@ private:
 
 	sf::Sprite backgroundSprite;
 
+	float shakeTimer = 0.f;
+	float shakeDuration = 0.f;
+	float shakeIntensity = 0.f;
+
+	std::array<sf::Vector2i, 4> landingEffectBlocks;
+	float landingEffectTimer = 0.f;
+
+	std::vector<ClearRowEffect> clearRowEffects;
+
+	void StartScreenShake(float duration, float intensity);
+	[[nodiscard]] bool IsPlayingClearRowEffect() const;
+
 	bool SpawnTetromino();
 	void TryMoveTetromino(int offsetX, int offsetY);
 	void TryRotateTetromino();
@@ -51,11 +71,10 @@ private:
 
 	[[nodiscard]] Tetromino GetGhostTetromino() const;
 	[[nodiscard]] Assets::TextureID GetBlockTextureID() const;
-
 public:
 	explicit GameState(Context& context);
 
 	void ProcessEvents(sf::RenderWindow& window) override;
 	void Update(float deltaTime) override;
-	void Render(sf::RenderWindow& window) override;
+	void Render(sf::RenderTarget& target) override;
 };

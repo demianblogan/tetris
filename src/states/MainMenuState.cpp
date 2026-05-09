@@ -184,12 +184,12 @@ void MainMenuState::Update(float deltaTime)
 	// No code
 }
 
-void MainMenuState::Render(sf::RenderWindow& window)
+void MainMenuState::Render(sf::RenderTarget& target)
 {
-	window.draw(backgroundSprite);
-	window.draw(titleBackgroundSprite);
+	target.draw(backgroundSprite);
+	target.draw(titleBackgroundSprite);
 
-	rootLayout.Render(window);
+	rootLayout.Render(target);
 }
 
 void MainMenuState::UpdateLayout()

@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\game\TetrominoBag.cpp" />
+    <ClCompile Include="src\resources\ShaderManager.cpp" />
     <ClCompile Include="src\states\GameOverState.cpp" />
     <ClCompile Include="src\states\PauseState.cpp" />
     <ClCompile Include="src\ui\Panel.cpp" />
@@ -168,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\TetrominoBag.h" />
+    <ClInclude Include="src\resources\ShaderManager.h" />
     <ClInclude Include="src\states\GameOverState.h" />
     <ClInclude Include="src\states\PauseState.h" />
     <ClInclude Include="src\ui\Panel.h" />
@@ -197,6 +199,12 @@
     <ClInclude Include="src\ui\Layout.h" />
     <ClInclude Include="src\ui\Slider.h" />
     <ClInclude Include="src\ui\Spacer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\blur.frag" />
+    <None Include="assets\shaders\crt.frag" />
+    <None Include="assets\shaders\ghost_tetromino.frag" />
+    <None Include="assets\shaders\glow.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

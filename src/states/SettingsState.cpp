@@ -595,8 +595,8 @@ void SettingsState::Update(float deltaTime)
 	// No code
 }
 
-void SettingsState::Render(sf::RenderWindow& window)
+void SettingsState::Render(sf::RenderTarget& target)
 {
-	window.draw(backgroundSprite);
-	rootLayout.Render(window);
+	target.draw(backgroundSprite);
+	rootLayout.Render(target);
 }

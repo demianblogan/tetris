@@ -45,7 +45,7 @@ namespace UI
 		[[nodiscard]] sf::Vector2f GetHandlePosition() const;
 		[[nodiscard]] float GetVisualHeight() const;
 
-		void DrawVisual(sf::RenderWindow& window, const Visual& visual, sf::Vector2f position, sf::Vector2f size) const;
+		void DrawVisual(sf::RenderTarget& target, const Visual& visual, sf::Vector2f position, sf::Vector2f size) const;
 
 	public:
 		Slider(
@@ -74,6 +74,6 @@ namespace UI
 
 		[[nodiscard]] bool Contains(sf::Vector2f point) const;
 
-		void Render(sf::RenderWindow& window) const override;
+		void Render(sf::RenderTarget& target) const override;
 	};
 }

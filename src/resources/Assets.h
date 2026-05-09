@@ -38,6 +38,14 @@ namespace Assets
 		GameBackground
 	};
 
+	enum class ShaderID
+	{
+		CRT,
+		Blur,
+		Glow,
+		GhostTetromino
+	};
+
 	namespace Paths
 	{
 		namespace Fonts
@@ -74,6 +82,14 @@ namespace Assets
 			inline constexpr const char* TitleBackground = "assets/textures/title_background.png";
 			inline constexpr const char* PanelBackground = "assets/textures/panel_background.png";
 			inline constexpr const char* GameBackground = "assets/textures/game_background.png";
+		}
+
+		namespace Shaders
+		{
+			inline constexpr const char* CRT = "assets/shaders/crt.frag";
+			inline constexpr const char* Blur = "assets/shaders/blur.frag";
+			inline constexpr const char* Glow = "assets/shaders/glow.frag";
+			inline constexpr const char* GhostTetromino = "assets/shaders/ghost_tetromino.frag";
 		}
 	}
 }

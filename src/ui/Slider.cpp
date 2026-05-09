@@ -141,14 +141,14 @@ namespace UI
 		return handleSize.y;
 	}
 
-	void Slider::Render(sf::RenderWindow& window) const
+	void Slider::Render(sf::RenderTarget& target) const
 	{
-		DrawVisual(window, trackVisual, GetTrackPosition(), GetTrackSize());
-		DrawVisual(window, fillVisual, GetTrackPosition(), GetFillSize());
-		DrawVisual(window, handleVisual, GetHandlePosition(), handleSize);
+		DrawVisual(target, trackVisual, GetTrackPosition(), GetTrackSize());
+		DrawVisual(target, fillVisual, GetTrackPosition(), GetFillSize());
+		DrawVisual(target, handleVisual, GetHandlePosition(), handleSize);
 	}
 
-	void Slider::DrawVisual(sf::RenderWindow& window, const Visual& visual, sf::Vector2f position, sf::Vector2f size) const
+	void Slider::DrawVisual(sf::RenderTarget& target, const Visual& visual, sf::Vector2f position, sf::Vector2f size) const
 	{
 		if (std::holds_alternative<RectangleVisual>(visual))
 		{
@@ -158,7 +158,7 @@ namespace UI
 			rect.setFillColor(rectangle.fillColor);
 			rect.setOutlineColor(rectangle.outlineColor);
 			rect.setOutlineThickness(rectangle.outlineThickness);
-			window.draw(rect);
+			target.draw(rect);
 			return;
 		}
 
@@ -176,7 +176,7 @@ namespace UI
 			sf::Sprite sprite = originalSprite;
 			sprite.setPosition(position);
 			sprite.setScale({ size.x / bounds.size.x, size.y / bounds.size.y });
-			window.draw(sprite);
+			target.draw(sprite);
 			return;
 		}
 
@@ -195,7 +195,7 @@ namespace UI
 			sprite.setTextureRect(textureRect);
 			sprite.setScale({ 1.f, size.y / bounds.size.y });
 
-			window.draw(sprite);
+			target.draw(sprite);
 
 			currentX += segmentWidth;
 		}

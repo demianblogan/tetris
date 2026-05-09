@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics/RenderTarget.hpp>
+
 namespace sf
 {
     class RenderWindow;
@@ -12,9 +14,9 @@ public:
 
     virtual void ProcessEvents(sf::RenderWindow& window) = 0;
     virtual void Update(float deltaTime) = 0;
-    virtual void Render(sf::RenderWindow& window) = 0;
+    virtual void Render(sf::RenderTarget& target) = 0;
 
-    [[nodiscard]]    virtual bool IsTransparent() const
+    [[nodiscard]] virtual bool IsTransparent() const
     {
         return false;
     }

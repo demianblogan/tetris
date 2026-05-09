@@ -213,8 +213,8 @@ StatisticsState::StatisticsState(Context& context)
 		// No code
 	}
 
-	void StatisticsState::Render(sf::RenderWindow& window)
+	void StatisticsState::Render(sf::RenderTarget& target)
 	{
-		window.draw(backgroundSprite);
-		rootLayout.Render(window);
+		target.draw(backgroundSprite);
+		rootLayout.Render(target);
 	}

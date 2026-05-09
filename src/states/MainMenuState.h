@@ -50,5 +50,5 @@ public:
 	void ProcessEvents(sf::RenderWindow& window) override;
 	void Update(float deltaTime) override;
 
-	void Render(sf::RenderWindow& window) override;
+	void Render(sf::RenderTarget& target) override;
 };
