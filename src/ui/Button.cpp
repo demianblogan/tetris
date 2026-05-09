@@ -147,17 +147,60 @@ namespace UI
 		return sf::FloatRect(position, size).contains(point);
 	}
 
-	void Button::Render(sf::RenderTarget& target) const
+	void Button::Render(sf::RenderTarget& target, sf::Shader* glowShader, float time) const
 	{
+		// =====================================================
+		// Glow
+		// =====================================================
+
+		if (selected && glowShader)
+		{
+			const float glowPadding = 2.f;
+
+			sf::RectangleShape glowRect;
+
+			glowRect.setPosition(
+				{
+					position.x - glowPadding,
+					position.y - glowPadding
+				}
+			);
+
+			glowRect.setSize(
+				{
+					size.x + glowPadding * 2.f,
+					size.y + glowPadding * 2.f
+				}
+			);
+
+			glowRect.setFillColor(
+				sf::Color(120, 220, 255, 110)
+			);
+
+			glowShader->setUniform("time", time);
+
+			sf::RenderStates glowStates;
+			glowStates.shader = glowShader;
+			glowStates.blendMode = sf::BlendAdd;
+
+			target.draw(glowRect, glowStates);
+		}
+
+		// =====================================================
+		// Normal button
+		// =====================================================
+
 		if (backgroundSprite)
 		{
 			sf::Sprite sprite = *backgroundSprite;
 
-			const sf::FloatRect bounds = sprite.getLocalBounds();
+			const sf::FloatRect bounds =
+				sprite.getLocalBounds();
 
 			if (bounds.size.x > 0.f && bounds.size.y > 0.f)
 			{
 				sprite.setPosition(position);
+
 				sprite.setScale(
 					{
 						size.x / bounds.size.x,
@@ -173,6 +216,7 @@ namespace UI
 		else
 		{
 			sf::RectangleShape rect(size);
+
 			rect.setPosition(position);
 			rect.setFillColor(backgroundColor);
 			rect.setOutlineColor(outlineColor);
@@ -185,6 +229,11 @@ namespace UI
 		{
 			label->Render(target);
 		}
+	}
+
+	void Button::Render(sf::RenderTarget& target) const
+	{
+		Render(target, nullptr, 0.f);
 	}
 
 	void Button::ApplyStyle(const Style& style)

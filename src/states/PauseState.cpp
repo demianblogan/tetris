@@ -123,7 +123,8 @@ void PauseState::Render(sf::RenderTarget& target)
 	// UI
 	// =====================================================
 
-	rootLayout.Render(target);
+	sf::Shader& glowShader = context.shaders.Get(Assets::ShaderID::Glow);
+	rootLayout.Render(target, &glowShader, context.totalTime);
 }
 
 bool PauseState::IsTransparent() const
@@ -134,7 +135,7 @@ bool PauseState::IsTransparent() const
 void PauseState::CreateMenuButton(const sf::String& text, MenuAction action)
 {
 	sf::Sprite buttonSprite(context.textures.Get(Assets::TextureID::ButtonBackground));
-	
+
 	auto button = std::make_unique<UI::Button>(buttonSprite);
 	button->SetLabel(std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), text, ButtonTextSize));
 	button->SetWidthPixels(ButtonWidth);

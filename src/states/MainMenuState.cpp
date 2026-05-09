@@ -121,8 +121,7 @@ void MainMenuState::CreateMenuButton(const sf::String& text, MenuAction action)
 	buttons.push_back({ .button = buttonPointer, .action = action });
 }
 
-void MainMenuState::ProcessEvents(sf::RenderWindow& window
-)
+void MainMenuState::ProcessEvents(sf::RenderWindow& window)
 {
 	while (const std::optional event = window.pollEvent())
 	{
@@ -189,7 +188,8 @@ void MainMenuState::Render(sf::RenderTarget& target)
 	target.draw(backgroundSprite);
 	target.draw(titleBackgroundSprite);
 
-	rootLayout.Render(target);
+	sf::Shader& glowShader = context.shaders.Get(Assets::ShaderID::Glow);
+	rootLayout.Render(target, &glowShader, context.totalTime);
 }
 
 void MainMenuState::UpdateLayout()

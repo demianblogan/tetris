@@ -8,6 +8,11 @@ namespace UI
 		this->size = size;
 	}
 
+	void Element::Render(sf::RenderTarget& target, sf::Shader* glowShader, float time) const
+	{
+		Render(target);
+	}
+
 	sf::Vector2f Element::GetPosition() const
 	{
 		return position;

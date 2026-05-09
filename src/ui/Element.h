@@ -41,6 +41,7 @@ namespace UI
 		[[nodiscard]] virtual sf::Vector2f Measure() const = 0;
 		virtual void Arrange(sf::Vector2f position, sf::Vector2f size);
 
+		virtual void Render(sf::RenderTarget& target, sf::Shader* glowShader, float time) const;
 		virtual void Render(sf::RenderTarget& target) const = 0;
 
 		[[nodiscard]] sf::Vector2f GetPosition() const;

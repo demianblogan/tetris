@@ -245,7 +245,8 @@ void GameOverState::Render(sf::RenderTarget& target)
 	// UI
 	// =====================================================
 
-	rootLayout.Render(target);
+	sf::Shader& glowShader = context.shaders.Get(Assets::ShaderID::Glow);
+	rootLayout.Render(target, &glowShader, context.totalTime);
 }
 
 void GameOverState::CreateMenuButton(const sf::String& text, MenuAction action)

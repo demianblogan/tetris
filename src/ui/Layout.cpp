@@ -276,19 +276,26 @@ namespace UI
 		}
 	}
 
-	void Layout::Render(sf::RenderTarget& target) const
+	void Layout::Render(sf::RenderTarget& target, sf::Shader* glowShader, float time) const
 	{
 		if (backgroundColor != sf::Color::Transparent)
 		{
 			sf::RectangleShape rect(size);
+
 			rect.setPosition(position);
 			rect.setFillColor(backgroundColor);
+
 			target.draw(rect);
 		}
 
 		for (const auto& child : children)
 		{
-			child->Render(target);
+			child->Render(target, glowShader, time);
 		}
+	}
+
+	void Layout::Render(sf::RenderTarget& target) const
+	{
+		Render(target, nullptr, 0.f);
 	}
 }
