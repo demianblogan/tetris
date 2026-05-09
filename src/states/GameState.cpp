@@ -12,6 +12,7 @@
 #include "MainMenuState.h"
 #include <settings/GameSettings.h>
 #include "../settings/SettingsManager.h"
+#include "PauseState.h"
 
 GameState::GameState(Context& context)
 	: context(context)
@@ -71,7 +72,6 @@ GameState::GameState(Context& context)
 		L"[ESC] - Pause";
 
 	auto controlsLabel = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), controlsText, 50);
-
 	controlsLabel->SetFillColor(sf::Color(150, 150, 150));
 	hudLayout->Add(std::move(controlsLabel));
 
@@ -120,7 +120,7 @@ void GameState::ProcessEvents(sf::RenderWindow& window)
 				break;
 
 			case sf::Keyboard::Scancode::Escape:
-				context.stateMachine.ChangeState(std::make_unique<MainMenuState>(context));
+				context.stateMachine.PushState(std::make_unique<PauseState>(context));
 				break;
 			}
 		}

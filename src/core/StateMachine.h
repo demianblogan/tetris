@@ -15,7 +15,8 @@ public:
     void PushState(std::unique_ptr<State> state);
     void PopState();
     void ChangeState(std::unique_ptr<State> state);
+    [[nodiscard]] State* GetCurrentState();
 
     void ApplyPendingChanges();
-    [[nodiscard]] State* GetCurrentState();
+    void RenderStates(sf::RenderWindow& window);
 };

@@ -29,10 +29,7 @@ void Game::Render()
 
 	window.setView(gameView);
 
-	if (State* currentState = stateMachine.GetCurrentState())
-	{
-		currentState->Render(window);
-	}
+	stateMachine.RenderStates(window);
 
 	window.display();
 }
