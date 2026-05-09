@@ -32,6 +32,11 @@ void StateMachine::ApplyPendingChanges()
 	stateChangeRequested = false;
 }
 
+void StateMachine::ClearStates()
+{
+	states.clear();
+}
+
 void StateMachine::RenderStates(sf::RenderWindow& window)
 {
 	if (states.empty())

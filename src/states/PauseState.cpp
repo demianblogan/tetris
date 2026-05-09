@@ -7,6 +7,7 @@
 #include "../core/StateMachine.h"
 #include "../resources/Assets.h"
 #include "MainMenuState.h"
+#include "GameState.h"
 
 namespace
 {
@@ -31,7 +32,7 @@ PauseState::PauseState(Context& context)
 	// Top spacer
 	// =====================================================
 
-	rootLayout.Add(std::make_unique<UI::Spacer>(sf::Vector2f{ 0.f, 200.f }));
+	rootLayout.Add(std::make_unique<UI::Spacer>(sf::Vector2f{ 0.f, 120.f }));
 
 	// =====================================================
 	// Title
@@ -58,6 +59,7 @@ PauseState::PauseState(Context& context)
 	// =====================================================
 
 	CreateMenuButton("Resume Game", MenuAction::ResumeGame);
+	CreateMenuButton("Restart Game", MenuAction::RestartGame);
 	CreateMenuButton("Main Menu", MenuAction::MainMenu);
 
 	UpdateSelection();
@@ -181,6 +183,11 @@ void PauseState::ActivateSelectedButton()
 	{
 	case MenuAction::ResumeGame:
 		context.stateMachine.PopState();
+		break;
+
+	case MenuAction::RestartGame:
+		context.stateMachine.ClearStates();
+		context.stateMachine.PushState(std::make_unique<GameState>(context));
 		break;
 
 	case MenuAction::MainMenu:

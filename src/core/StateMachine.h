@@ -18,5 +18,7 @@ public:
     [[nodiscard]] State* GetCurrentState();
 
     void ApplyPendingChanges();
+
+    void ClearStates();
     void RenderStates(sf::RenderWindow& window);
 };

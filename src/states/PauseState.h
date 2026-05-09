@@ -13,6 +13,7 @@ private:
 	enum class MenuAction
 	{
 		ResumeGame,
+		RestartGame,
 		MainMenu
 	};
 
