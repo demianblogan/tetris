@@ -498,7 +498,7 @@ void SettingsState::ActivateCurrentElement()
 		const bool withOutline = settings.blockRenderStyle == BlockRenderStyle::WithOutline;
 
 		blockStyleButton->GetLabel()->SetString(
-			withOutline ? "Block Style: With outline" : "Block Style: Without outline"
+			withOutline ? "Block style: With outline" : "Block style: Without outline"
 		);
 
 		ApplyAndSaveSettings();

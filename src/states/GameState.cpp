@@ -1,4 +1,4 @@
-// GameState.cpp
+﻿// GameState.cpp
 
 #include "GameState.h"
 
@@ -16,8 +16,74 @@
 GameState::GameState(Context& context)
 	: context(context)
 	, currentTetromino(tetrominoBag.Next(), { Board::WIDTH / 2 - 2, 0 })
+	, nextTetromino(tetrominoBag.Next(), { 0, 0 })
 {
-	// No code
+	hudLayout = std::make_unique<UI::Layout>(UI::Layout::Orientation::Vertical);
+	hudLayout->SetGap(32.f);
+
+	// =====================================================
+	// Next tetromino label
+	// =====================================================
+
+	auto nextTetrominoLabelElement = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Next Tetromino:", 60);
+	nextTetrominoLabelElement->SetFillColor(sf::Color::White);
+	nextTetrominoLabel = nextTetrominoLabelElement.get();
+	hudLayout->Add(std::move(nextTetrominoLabelElement));
+
+	// =====================================================
+	// Spacer
+	// =====================================================
+
+	hudLayout->Add(std::make_unique<UI::Spacer>(sf::Vector2f(0.f, 140.f)));
+
+	// =====================================================
+	// Score label
+	// =====================================================
+
+	auto scoreLabelElement = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Score: 0", 60);
+	scoreLabelElement->SetFillColor(sf::Color::White);
+	scoreLabel = scoreLabelElement.get();
+	hudLayout->Add(std::move(scoreLabelElement));
+
+	// =====================================================
+	// Level label
+	// =====================================================
+
+	auto levelLabelElement = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), "Level: 1", 60);
+	levelLabelElement->SetFillColor(sf::Color::White);
+	levelLabel = levelLabelElement.get();
+	hudLayout->Add(std::move(levelLabelElement));
+
+	// =====================================================
+	// Spacer
+	// =====================================================
+
+	hudLayout->Add(std::make_unique<UI::Spacer>(sf::Vector2f(0.f, 300.f)));
+
+	// =====================================================
+	// Controls label
+	// =====================================================
+
+	sf::String controlsText =
+		L"[←] [↓] [→] - Move tetromino\n"
+		L"[↑] - Rotate tetromino\n"
+		L"[Space] - Drop tetromino\n"
+		L"[ESC] - Pause";
+
+	auto controlsLabel = std::make_unique<UI::Label>(context.fonts.Get(Assets::FontID::Main), controlsText, 50);
+
+	controlsLabel->SetFillColor(sf::Color(150, 150, 150));
+	hudLayout->Add(std::move(controlsLabel));
+
+	const sf::Vector2f hudSize = hudLayout->Measure();
+
+	hudLayout->Arrange(
+		{
+			BOARD_POSITION.x + Board::WIDTH * BLOCK_SIZE + 100.f,
+			BOARD_POSITION.y
+		},
+		hudSize
+	);
 }
 
 void GameState::ProcessEvents(sf::RenderWindow& window)
@@ -79,9 +145,7 @@ void GameState::Update(float deltaTime)
 		}
 		else
 		{
-			board.LockTetromino(currentTetromino);
-			board.ClearFullRows();
-			SpawnTetromino();
+			HandleTetrominoLanding();
 		}
 	}
 }
@@ -204,15 +268,61 @@ void GameState::Render(sf::RenderWindow& window)
 
 		window.draw(blockSprite);
 	}
+
+	// =====================================================
+	// Render UI
+	// =====================================================
+
+	hudLayout->Render(window);
+
+	// =====================================================
+	// Render next tetromino preview
+	// =====================================================
+
+	const auto previewBlockPositions = nextTetromino.GetBlockPositions();
+	const int previewTextureX = static_cast<int>(nextTetromino.GetType()) * SPRITE_SIZE;
+
+	blockSprite.setTextureRect(
+		{
+			{ previewTextureX, 0 },
+			{ SPRITE_SIZE, SPRITE_SIZE }
+		}
+	);
+
+	constexpr float PREVIEW_BLOCK_SIZE = 36.f;
+
+	blockSprite.setScale(
+		{
+			PREVIEW_BLOCK_SIZE / 16.f,
+			PREVIEW_BLOCK_SIZE / 16.f
+		}
+	);
+
+	const sf::Vector2f previewPosition
+	{
+		BOARD_POSITION.x + Board::WIDTH * BLOCK_SIZE + 200.f,
+		BOARD_POSITION.y + 80.f
+	};
+
+	for (const sf::Vector2i& blockPosition : previewBlockPositions)
+	{
+		blockSprite.setPosition(
+			{
+				previewPosition.x + blockPosition.x * PREVIEW_BLOCK_SIZE,
+				previewPosition.y + blockPosition.y * PREVIEW_BLOCK_SIZE
+			}
+		);
+
+		window.draw(blockSprite);
+	}
 }
 
-void GameState::SpawnTetromino()
+bool GameState::SpawnTetromino()
 {
-	currentTetromino =
-	{
-		tetrominoBag.Next(),
-		{ Board::WIDTH / 2 - 2, 0 }
-	};
+	currentTetromino = { nextTetromino.GetType(), { Board::WIDTH / 2 - 2, 0 } };
+	nextTetromino = { tetrominoBag.Next(), { 0, 0 } };
+
+	return board.CanPlace(currentTetromino);
 }
 
 void GameState::TryMoveTetromino(int offsetX, int offsetY)
@@ -260,15 +370,30 @@ void GameState::TryDropTetromino()
 	}
 
 	board.LockTetromino(currentTetromino);
-	board.ClearFullRows();
-
-	SpawnTetromino();
+	HandleTetrominoLanding();
 
 	fallTimer = 0.f;
 }
 
-Assets::TextureID
-GameState::GetBlockTextureID() const
+void GameState::HandleTetrominoLanding()
+{
+	board.LockTetromino(currentTetromino);
+
+	const int clearedRows = board.ClearFullRows();
+	score += clearedRows * 10;
+	level = score / SCORE_PER_LEVEL + 1;
+	fallDelay = std::max(0.1f, 0.5f - (level - 1) * 0.05f);
+
+	scoreLabel->SetString("Score: " + std::to_string(score));
+	levelLabel->SetString("Level: " + std::to_string(level));
+
+	if (!SpawnTetromino())
+	{
+		context.stateMachine.ChangeState(std::make_unique<MainMenuState>(context));
+	}
+}
+
+Assets::TextureID GameState::GetBlockTextureID() const
 {
 	switch (context.settings.GetSettings().blockRenderStyle)
 	{
