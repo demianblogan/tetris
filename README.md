@@ -6,11 +6,14 @@ Featuring a custom UI system, leaderboard support, configurable settings, shader
 
 ---
 
-## 🎮 Gameplay
+## 🎮 Menu & Gameplay
 
-![Preview](YOUR_SCREENSHOT_OR_GIF_HERE)
+![Preview](https://github.com/user-attachments/assets/6ce80c68-cfcb-40a9-bb6d-c5d7045affd1)
 
 ---
+![Preview](https://github.com/user-attachments/assets/7ce3882c-3c77-49cd-8658-c5f6108ecc03)
+---
+
 
 ## 📦 Download & Play
 
