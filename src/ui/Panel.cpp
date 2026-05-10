@@ -1,8 +1,6 @@
-// Panel.cpp
-
 #include "Panel.h"
 
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace UI
 {
@@ -52,6 +50,7 @@ namespace UI
 	{
 		sf::Sprite sprite = backgroundSprite;
 		const sf::FloatRect bounds = sprite.getLocalBounds();
+
 		sprite.setPosition(position);
 		sprite.setScale(
 			{

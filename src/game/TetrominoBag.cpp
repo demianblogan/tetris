@@ -1,6 +1,7 @@
 #include "TetrominoBag.h"
 
 #include <algorithm>
+
 #include "../utils/Random.h"
 
 Tetromino::Type TetrominoBag::Next()

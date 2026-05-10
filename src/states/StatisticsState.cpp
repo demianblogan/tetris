@@ -1,12 +1,13 @@
-
 #include "StatisticsState.h"
 
 #include <optional>
+
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+
 #include "../core/StateMachine.h"
 #include "../resources/Assets.h"
 #include "MainMenuState.h"
-#include <SFML/Graphics/RectangleShape.hpp>
 
 namespace
 {
@@ -128,93 +129,92 @@ StatisticsState::StatisticsState(Context& context)
 			footerLayout->Add(std::move(label));
 		}
 
-		rootLayout.Add(std::move(footerLayout)
-		);
+		rootLayout.Add(std::move(footerLayout));
 	}
 
 	UpdateLayout();
-	}
+}
 
-		void StatisticsState::UpdateScoreLabels()
+void StatisticsState::UpdateScoreLabels()
+{
+	const std::vector<HighScoreEntry>& records = highScoreManager.GetRecords();
+
+	for (std::size_t i = 0; i < HighScoreManager::MAX_RECORDS; i++)
 	{
-		const std::vector<HighScoreEntry>& records = highScoreManager.GetRecords();
-
-		for (std::size_t i = 0; i < HighScoreManager::MAX_RECORDS; i++)
+		if (i < records.size())
 		{
-			if (i < records.size())
-			{
-				scoreLabels[i]->SetString(std::to_string(i + 1) + ". " + records[i].playerName + " = " + std::to_string(records[i].score));
-			}
-			else
-			{
-				scoreLabels[i]->SetString(std::to_string(i + 1) + ". ...");
-			}
+			scoreLabels[i]->SetString(std::to_string(i + 1) + ". " + records[i].playerName + " = " + std::to_string(records[i].score));
 		}
-
-		UpdateLayout();
-	}
-
-	void StatisticsState::UpdateLayout()
-	{
-		const sf::Vector2f viewSize = context.window.getView().getSize();
-		rootLayout.Arrange({ 0.f, 0.f }, viewSize);
-	}
-
-	void StatisticsState::ProcessEvents(sf::RenderWindow& window)
-	{
-		while (const std::optional event = window.pollEvent())
+		else
 		{
-			if (event->is<sf::Event::Closed>())
-			{
-				window.close();
-			}
-			else if (const auto* resized = event->getIf<sf::Event::Resized>())
-			{
-				sf::View view = window.getView();
+			scoreLabels[i]->SetString(std::to_string(i + 1) + ". ...");
+		}
+	}
 
-				view.setSize(
-					{
-						static_cast<float>(resized->size.x),
-						static_cast<float>(resized->size.y)
-					}
-				);
+	UpdateLayout();
+}
 
-				view.setCenter(
-					{
-						static_cast<float>(resized->size.x) / 2.f,
-						static_cast<float>(resized->size.y) / 2.f
-					}
-				);
+void StatisticsState::UpdateLayout()
+{
+	const sf::Vector2f viewSize = context.window.getView().getSize();
+	rootLayout.Arrange({ 0.f, 0.f }, viewSize);
+}
 
-				window.setView(view);
+void StatisticsState::ProcessEvents(sf::RenderWindow& window)
+{
+	while (const std::optional event = window.pollEvent())
+	{
+		if (event->is<sf::Event::Closed>())
+		{
+			window.close();
+		}
+		else if (const auto* resized = event->getIf<sf::Event::Resized>())
+		{
+			sf::View view = window.getView();
 
-				UpdateLayout();
-			}
-			else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
-			{
-				switch (keyPressed->scancode)
+			view.setSize(
 				{
-				case sf::Keyboard::Scancode::Escape:
-					context.stateMachine.ChangeState(std::make_unique<MainMenuState>(context));
-					return;
-
-				case sf::Keyboard::Scancode::Delete:
-					highScoreManager.Clear();
-					highScoreManager.Save();
-					UpdateScoreLabels();
-					break;
+					static_cast<float>(resized->size.x),
+					static_cast<float>(resized->size.y)
 				}
+			);
+
+			view.setCenter(
+				{
+					static_cast<float>(resized->size.x) / 2.f,
+					static_cast<float>(resized->size.y) / 2.f
+				}
+			);
+
+			window.setView(view);
+
+			UpdateLayout();
+		}
+		else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+		{
+			switch (keyPressed->scancode)
+			{
+			case sf::Keyboard::Scancode::Escape:
+				context.stateMachine.ChangeState(std::make_unique<MainMenuState>(context));
+				return;
+
+			case sf::Keyboard::Scancode::Delete:
+				highScoreManager.Clear();
+				highScoreManager.Save();
+				UpdateScoreLabels();
+				break;
 			}
 		}
 	}
+}
 
-	void StatisticsState::Update(float deltaTime)
-	{
-		// No code
-	}
+void StatisticsState::Update(float deltaTime)
+{
+	// No code
+}
 
-	void StatisticsState::Render(sf::RenderTarget& target)
-	{
-		target.draw(backgroundSprite);
-		rootLayout.Render(target);
-	}
+void StatisticsState::Render(sf::RenderTarget& target)
+{
+	target.draw(backgroundSprite);
+	rootLayout.Render(target);
+}

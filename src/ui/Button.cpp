@@ -1,7 +1,7 @@
 #include "Button.h"
 
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace UI
 {
@@ -22,7 +22,6 @@ namespace UI
 		: backgroundSprite(sprite)
 	{
 		const sf::FloatRect bounds = sprite.getGlobalBounds();
-
 		preferredSize = bounds.size;
 
 		SetWidthPixels(bounds.size.x);
@@ -173,9 +172,7 @@ namespace UI
 				}
 			);
 
-			glowRect.setFillColor(
-				sf::Color(120, 220, 255, 110)
-			);
+			glowRect.setFillColor(sf::Color(120, 220, 255, 110));
 
 			glowShader->setUniform("time", time);
 
@@ -194,20 +191,17 @@ namespace UI
 		{
 			sf::Sprite sprite = *backgroundSprite;
 
-			const sf::FloatRect bounds =
-				sprite.getLocalBounds();
+			const sf::FloatRect bounds = sprite.getLocalBounds();
 
 			if (bounds.size.x > 0.f && bounds.size.y > 0.f)
 			{
 				sprite.setPosition(position);
-
 				sprite.setScale(
 					{
 						size.x / bounds.size.x,
 						size.y / bounds.size.y
 					}
 				);
-
 				sprite.setColor(backgroundColor);
 
 				target.draw(sprite);

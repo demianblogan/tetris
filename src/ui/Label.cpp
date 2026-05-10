@@ -1,6 +1,6 @@
 #include "Label.h"
 
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace UI
 {
@@ -34,11 +34,7 @@ namespace UI
 	{
 		const sf::FloatRect bounds = text.getLocalBounds();
 
-		return
-		{
-			bounds.size.x,
-			bounds.size.y
-		};
+		return { bounds.size.x, bounds.size.y };
 	}
 
 	void Label::Arrange(sf::Vector2f position, sf::Vector2f size)

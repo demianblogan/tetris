@@ -33,11 +33,10 @@ void Game::Render()
 
 	State* currentState = stateMachine.GetCurrentState();
 
-	const bool isPause =
-		dynamic_cast<PauseState*>(currentState) != nullptr;
+	const bool isPause = dynamic_cast<PauseState*>(currentState) != nullptr;
 
 	// =====================================================
-	// NORMAL RENDER
+	// Normal Render
 	// =====================================================
 
 	if (!isPause)
@@ -89,7 +88,7 @@ void Game::Render()
 }
 
 Game::Game()
-	: window(sf::VideoMode::getDesktopMode(), "Tetris", sf::State::Fullscreen)
+	: window(sf::VideoMode::getDesktopMode(), "Tetris", sf::Style::None, sf::State::Windowed)
 	, gameView({ VIRTUAL_RESOLUTION / 2.f, VIRTUAL_RESOLUTION })
 	, audioPlayer(soundBuffers)
 	, settings(Data::Paths::Settings)

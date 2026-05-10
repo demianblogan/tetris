@@ -1,13 +1,15 @@
 #pragma once
 
 #include <array>
+
+#include <SFML/Graphics/Sprite.hpp>
+
 #include "../core/Context.h"
 #include "../core/State.h"
 #include "../statistics/HighScoreManager.h"
 #include "../ui/Layout.h"
 #include "../ui/Label.h"
 #include "../ui/Spacer.h"
-#include <SFML/Graphics/Sprite.hpp>
 
 class StatisticsState final : public State
 {

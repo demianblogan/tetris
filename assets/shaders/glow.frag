@@ -3,21 +3,32 @@ uniform float time;
 
 void main()
 {
-    vec2 uv = gl_TexCoord[0].xy;
+    vec2 textureCoordinates = gl_TexCoord[0].xy;
+    vec4 textureColor = texture2D(texture, textureCoordinates);
 
-    vec4 tex = texture2D(texture, uv);
+    // =====================================================
+    // Pulse animation
+    // =====================================================
 
-    float pulse =
-        0.85 + sin(time * 4.0) * 0.15;
+    float pulseIntensity = 0.85 + sin(time * 4.0) * 0.15;
 
-    vec3 glowTint =
-        vec3(0.4, 0.9, 1.0);
+    // =====================================================
+    // Glow tint
+    // =====================================================
 
-    vec3 color =
-        tex.rgb * pulse;
+    vec3 glowTintColor = vec3(0.4, 0.9, 1.0);
 
-    color += glowTint * 0.22 * pulse;
+    // =====================================================
+    // Base color
+    // =====================================================
 
-    gl_FragColor =
-        vec4(color, tex.a);
+    vec3 finalColor = textureColor.rgb * pulseIntensity;
+
+    // =====================================================
+    // Additional glow
+    // =====================================================
+
+    finalColor += glowTintColor * 0.22 * pulseIntensity;
+
+    gl_FragColor = vec4(finalColor, textureColor.a);
 }

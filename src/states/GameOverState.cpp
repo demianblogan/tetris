@@ -1,15 +1,16 @@
-
 #include "GameOverState.h"
 
 #include <optional>
+
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+
 #include "../audio/AudioPlayer.h"
 #include "../core/StateMachine.h"
 #include "../resources/Assets.h"
+#include "../statistics/HighScoreManager.h"
 #include "GameState.h"
 #include "MainMenuState.h"
-#include "../statistics/HighScoreManager.h"
 
 namespace
 {

@@ -4,13 +4,14 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Shader.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+
 #include "../audio/AudioPlayer.h"
 #include "../resources/ResourceManager.h"
 #include "../settings/SettingsManager.h"
 #include "../statistics/HighScoreManager.h"
+#include "../resources/ShaderManager.h"
 #include "Context.h"
 #include "StateMachine.h"
-#include "../resources/ShaderManager.h"
 
 class Game
 {

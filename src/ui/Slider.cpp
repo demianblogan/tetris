@@ -2,8 +2,9 @@
 
 #include <algorithm>
 #include <cmath>
+
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace UI
 {
@@ -88,11 +89,6 @@ namespace UI
 		};
 	}
 
-	void Slider::Arrange(sf::Vector2f position, sf::Vector2f size)
-	{
-		Element::Arrange(position, size);
-	}
-
 	bool Slider::Contains(sf::Vector2f point) const
 	{
 		return sf::FloatRect(position, size).contains(point);
@@ -112,7 +108,11 @@ namespace UI
 
 	sf::Vector2f Slider::GetTrackPosition() const
 	{
-		return { position.x, position.y + (size.y - preferredTrackSize.y) / 2.f };
+		return
+		{
+			position.x,
+			position.y + (size.y - preferredTrackSize.y) / 2.f
+		};
 	}
 
 	sf::Vector2f Slider::GetTrackSize() const
@@ -136,11 +136,6 @@ namespace UI
 		};
 	}
 
-	float Slider::GetVisualHeight() const
-	{
-		return handleSize.y;
-	}
-
 	void Slider::Render(sf::RenderTarget& target) const
 	{
 		DrawVisual(target, trackVisual, GetTrackPosition(), GetTrackSize());
@@ -154,11 +149,14 @@ namespace UI
 		{
 			const RectangleVisual& rectangle = std::get<RectangleVisual>(visual);
 			sf::RectangleShape rect(size);
+
 			rect.setPosition(position);
 			rect.setFillColor(rectangle.fillColor);
 			rect.setOutlineColor(rectangle.outlineColor);
 			rect.setOutlineThickness(rectangle.outlineThickness);
+
 			target.draw(rect);
+
 			return;
 		}
 
@@ -174,9 +172,12 @@ namespace UI
 		if (!spriteVisual.tiled)
 		{
 			sf::Sprite sprite = originalSprite;
+
 			sprite.setPosition(position);
 			sprite.setScale({ size.x / bounds.size.x, size.y / bounds.size.y });
+
 			target.draw(sprite);
+
 			return;
 		}
 

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <array>
+
 #include <SFML/System/Vector2.hpp>
+
 #include "TetrominoShapes.h"
 
 class Tetromino

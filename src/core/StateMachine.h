@@ -2,8 +2,14 @@
 
 #include <memory>
 #include <vector>
+
 #include "State.h"
-#include <SFML/Graphics/RenderTarget.hpp>
+
+namespace sf
+{
+    class RenderTarget;
+}
+
 
 class StateMachine
 {

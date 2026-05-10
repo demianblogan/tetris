@@ -1,11 +1,11 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace sf
 {
-	class RenderWindow;
+	class RenderTarget;
+	class Shader;
 }
 
 namespace UI

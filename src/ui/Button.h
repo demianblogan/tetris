@@ -2,9 +2,11 @@
 
 #include <memory>
 #include <optional>
+
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Shader.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
 #include "Label.h"
 
 namespace UI

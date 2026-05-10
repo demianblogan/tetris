@@ -4,7 +4,6 @@
 
 #include "../core/Context.h"
 #include "../core/State.h"
-
 #include "../ui/Button.h"
 #include "../ui/Layout.h"
 #include "../ui/Label.h"

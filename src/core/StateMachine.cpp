@@ -1,5 +1,8 @@
 #include "StateMachine.h"
 
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+
 void StateMachine::PushState(std::unique_ptr<State> state)
 {
 	states.push_back(std::move(state));

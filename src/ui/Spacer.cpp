@@ -1,5 +1,3 @@
-// Spacer.cpp
-
 #include "Spacer.h"
 
 namespace UI
@@ -14,11 +12,6 @@ namespace UI
 	sf::Vector2f Spacer::Measure() const
 	{
 		return preferredSize;
-	}
-
-	void Spacer::Arrange(sf::Vector2f position, sf::Vector2f size)
-	{
-		Element::Arrange(position, size);
 	}
 
 	void Spacer::Render(sf::RenderTarget& target) const

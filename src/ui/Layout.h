@@ -2,8 +2,16 @@
 
 #include <memory>
 #include <vector>
+
 #include <SFML/Graphics/Color.hpp>
+
 #include "Element.h"
+
+namespace sf
+{
+	class Shader;
+	class RenderTarget;
+}
 
 namespace UI
 {
@@ -40,6 +48,7 @@ namespace UI
 		Alignment verticalAlignment = Alignment::Start;
 		Padding padding;
 		float gap = 0.f;
+
 		sf::Color backgroundColor = sf::Color::Transparent;
 
 		[[nodiscard]] float ResolveChildWidth(const Element& child, float availableWidth, float fillWidth) const;
@@ -49,7 +58,6 @@ namespace UI
 		explicit Layout(Orientation orientation);
 
 		void Add(std::unique_ptr<Element> child);
-
 		[[nodiscard]] const std::vector<std::unique_ptr<Element>>& GetChildren() const;
 
 		void SetGap(float gap);

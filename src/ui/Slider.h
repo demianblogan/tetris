@@ -1,8 +1,10 @@
 #pragma once
 
 #include <variant>
+
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+
 #include "Element.h"
 
 namespace UI
@@ -43,7 +45,6 @@ namespace UI
 		[[nodiscard]] sf::Vector2f GetTrackSize() const;
 		[[nodiscard]] sf::Vector2f GetFillSize() const;
 		[[nodiscard]] sf::Vector2f GetHandlePosition() const;
-		[[nodiscard]] float GetVisualHeight() const;
 
 		void DrawVisual(sf::RenderTarget& target, const Visual& visual, sf::Vector2f position, sf::Vector2f size) const;
 
@@ -70,7 +71,6 @@ namespace UI
 		void SetStep(float step);
 
 		[[nodiscard]] sf::Vector2f Measure() const override;
-		void Arrange(sf::Vector2f position, sf::Vector2f size) override;
 
 		[[nodiscard]] bool Contains(sf::Vector2f point) const;
 

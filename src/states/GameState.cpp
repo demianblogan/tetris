@@ -1,21 +1,20 @@
-﻿// GameState.cpp
-
-#include "GameState.h"
+﻿#include "GameState.h"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include "../resources/Assets.h"
 #include <SFML/Graphics/RectangleShape.hpp>
+
+#include "../audio/AudioPlayer.h"
+#include "../resources/Assets.h"
 #include "../core/Context.h"
 #include "../core/StateMachine.h"
-#include "MainMenuState.h"
-#include <settings/GameSettings.h>
 #include "../settings/SettingsManager.h"
+#include "../settings/GameSettings.h"
+#include "../utils/Random.h"
+#include "MainMenuState.h"
 #include "PauseState.h"
 #include "GameOverState.h"
-#include "../audio/AudioPlayer.h"
-#include <utils/Random.h>
 
 GameState::GameState(Context& context)
 	: context(context)
@@ -436,9 +435,7 @@ void GameState::Render(sf::RenderTarget& target)
 				continue;
 			}
 
-			const int textureX =
-				static_cast<int>(cell.tetrominoType)
-				* SPRITE_SIZE;
+			const int textureX = static_cast<int>(cell.tetrominoType) * SPRITE_SIZE;
 
 			blockSprite.setTextureRect(
 				{
@@ -469,7 +466,6 @@ void GameState::Render(sf::RenderTarget& target)
 		// =====================================================
 
 		const float t = effect.timer / CLEAR_ROW_EFFECT_DURATION;
-
 		const int alpha = static_cast<int>((1.f - t) * 255.f);
 
 		sf::RectangleShape flash;
@@ -514,13 +510,8 @@ void GameState::Render(sf::RenderTarget& target)
 	// =====================================================
 
 	const Tetromino ghostTetromino = GetGhostTetromino();
-
-	const auto ghostBlockPositions =
-		ghostTetromino.GetBlockPositions();
-
-	const int ghostTextureX =
-		static_cast<int>(ghostTetromino.GetType())
-		* SPRITE_SIZE;
+	const auto ghostBlockPositions = ghostTetromino.GetBlockPositions();
+	const int ghostTextureX = static_cast<int>(ghostTetromino.GetType()) * SPRITE_SIZE;
 
 	blockSprite.setTextureRect(
 		{
@@ -540,6 +531,7 @@ void GameState::Render(sf::RenderTarget& target)
 
 		sf::Shader& ghostShader = context.shaders.Get(Assets::ShaderID::GhostTetromino);
 		ghostShader.setUniform("time", context.totalTime);
+
 		target.draw(blockSprite, &ghostShader);
 	}
 
@@ -570,12 +562,8 @@ void GameState::Render(sf::RenderTarget& target)
 	// Render current tetromino
 	// =====================================================
 
-	const auto blockPositions =
-		currentTetromino.GetBlockPositions();
-
-	const int textureX =
-		static_cast<int>(currentTetromino.GetType())
-		* SPRITE_SIZE;
+	const auto blockPositions = currentTetromino.GetBlockPositions();
+	const int textureX = static_cast<int>(currentTetromino.GetType()) * SPRITE_SIZE;
 
 	blockSprite.setTextureRect(
 		{
@@ -597,20 +585,10 @@ void GameState::Render(sf::RenderTarget& target)
 		}
 	);
 
-	blockSprite.setColor(
-		sf::Color(255, 255, 255, 50)
-	);
+	blockSprite.setColor(sf::Color(255, 255, 255, 50));
 
-	const float glowOffset =
-		(BLOCK_SIZE * glowScale - BLOCK_SIZE) / 2.f;
-
-	sf::Shader& glowShader =
-		context.shaders.Get(Assets::ShaderID::Glow);
-
-	glowShader.setUniform(
-		"time",
-		context.totalTime
-	);
+	const float glowOffset = (BLOCK_SIZE * glowScale - BLOCK_SIZE) / 2.f;
+	sf::Shader& glowShader = context.shaders.Get(Assets::ShaderID::Glow);
 
 	sf::RenderStates glowStates;
 	glowStates.blendMode = sf::BlendAdd;
@@ -625,10 +603,7 @@ void GameState::Render(sf::RenderTarget& target)
 			}
 		);
 
-		target.draw(
-			blockSprite,
-			glowStates
-		);
+		target.draw(blockSprite, glowStates);
 	}
 
 	// =====================================================
@@ -667,12 +642,8 @@ void GameState::Render(sf::RenderTarget& target)
 	// Render next tetromino preview
 	// =====================================================
 
-	const auto previewBlockPositions =
-		nextTetromino.GetBlockPositions();
-
-	const int previewTextureX =
-		static_cast<int>(nextTetromino.GetType())
-		* SPRITE_SIZE;
+	const auto previewBlockPositions = nextTetromino.GetBlockPositions();
+	const int previewTextureX = static_cast<int>(nextTetromino.GetType()) * SPRITE_SIZE;
 
 	blockSprite.setTextureRect(
 		{

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+
 #include "../core/Context.h"
 #include "../core/State.h"
 #include "../settings/GameSettings.h"

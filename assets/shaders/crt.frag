@@ -3,23 +3,26 @@ uniform float time;
 
 void main()
 {
-    vec2 uv = gl_TexCoord[0].xy;
+    vec2 textureCoordinates = gl_TexCoord[0].xy;
 
     // =====================================================
     // CRT curvature
     // =====================================================
+    
+    float screenDistortionStrength = 0.03;
 
-    vec2 curvedUV = uv * 2.0 - 1.0;
+    vec2 curvedTextureCoordinates = textureCoordinates * 2.0 - 1.0;
+    curvedTextureCoordinates += curvedTextureCoordinates * length(curvedTextureCoordinates) * screenDistortionStrength;
+    curvedTextureCoordinates = (curvedTextureCoordinates + 1.0) * 0.5;
 
-    float distortion = 0.03;
-
-    curvedUV += curvedUV * length(curvedUV) * distortion;
-
-    curvedUV = (curvedUV + 1.0) * 0.5;
-
+    // =====================================================
     // Outside screen
-    if (curvedUV.x < 0.0 || curvedUV.x > 1.0 ||
-        curvedUV.y < 0.0 || curvedUV.y > 1.0)
+    // =====================================================
+
+    if (curvedTextureCoordinates.x < 0.0 ||
+        curvedTextureCoordinates.x > 1.0 ||
+        curvedTextureCoordinates.y < 0.0 ||
+        curvedTextureCoordinates.y > 1.0)
     {
         gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
         return;
@@ -29,29 +32,29 @@ void main()
     // Chromatic aberration
     // =====================================================
 
-    float chromaStrength = 0.0005;
+    float chromaticAberrationStrength = 0.0005;
 
-    float r = texture2D(texture, curvedUV + vec2(chromaStrength, 0.0)).r;
-    float g = texture2D(texture, curvedUV).g;
-    float b = texture2D(texture, curvedUV - vec2(chromaStrength, 0.0)).b;
+    float redChannel = texture2D(texture, curvedTextureCoordinates + vec2(chromaticAberrationStrength, 0.0)).r;
+    float greenChannel = texture2D(texture, curvedTextureCoordinates).g;
+    float blueChannel = texture2D(texture, curvedTextureCoordinates - vec2(chromaticAberrationStrength, 0.0)).b;
 
-    vec3 color = vec3(r, g, b);
+    vec3 finalColor = vec3(redChannel, greenChannel, blueChannel);
 
     // =====================================================
     // Scanlines
     // =====================================================
 
-    float scanline =  sin(curvedUV.y * 1080.0 * 1.5) * 0.04;
+    float scanlineIntensity = sin(curvedTextureCoordinates.y * 1080.0 * 1.5) * 0.04;
 
-    color -= scanline;
+    finalColor -= scanlineIntensity;
 
     // =====================================================
     // Vignette
     // =====================================================
 
-    float dist = distance(curvedUV, vec2(0.5));
+    float distanceFromScreenCenter = distance(curvedTextureCoordinates, vec2(0.5));
 
-    color *= 1.0 - dist * 0.5;
+    finalColor *= 1.0 - distanceFromScreenCenter * 0.5;
 
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(finalColor, 1.0);
 }

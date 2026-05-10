@@ -1,7 +1,9 @@
 #include "MainMenuState.h"
 
 #include <optional>
+
 #include <SFML/Graphics/RenderWindow.hpp>
+
 #include "../audio/AudioPlayer.h"
 #include "../core/StateMachine.h"
 #include "../resources/Assets.h"

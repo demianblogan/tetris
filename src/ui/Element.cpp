@@ -1,5 +1,8 @@
 #include "Element.h"
 
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Shader.hpp>
+
 namespace UI
 {
 	void Element::Arrange(sf::Vector2f position, sf::Vector2f size)

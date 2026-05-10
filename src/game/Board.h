@@ -18,11 +18,12 @@ private:
 	Grid grid;
 
 public:
+	void LockTetromino(const Tetromino& tetromino);
+	int ClearFullRows();
+
 	[[nodiscard]] bool Contains(const Tetromino& tetromino) const;
 	[[nodiscard]] bool IntersectsLockedCells(const Tetromino& tetromino) const;
 	[[nodiscard]] bool CanPlace(const Tetromino& tetromino) const;
-	void LockTetromino(const Tetromino& tetromino);
-	int ClearFullRows();
 	[[nodiscard]] std::vector<int> GetFullRows() const;
 	[[nodiscard]] const Grid& GetGrid() const;
 };

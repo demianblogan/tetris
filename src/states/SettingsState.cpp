@@ -1,7 +1,9 @@
 #include "SettingsState.h"
 
 #include <optional>
+
 #include <SFML/Graphics/RenderWindow.hpp>
+
 #include "../audio/AudioPlayer.h"
 #include "../core/StateMachine.h"
 #include "../resources/Assets.h"
@@ -317,12 +319,10 @@ void SettingsState::CreateSliderRow(
 			{
 				.fillColor = sf::Color(50, 50, 50)
 			},
-
 			UI::Slider::RectangleVisual
 			{
 				.fillColor = sf::Color(100, 220, 255)
 			},
-
 			UI::Slider::RectangleVisual
 			{
 				.fillColor = sf::Color::White

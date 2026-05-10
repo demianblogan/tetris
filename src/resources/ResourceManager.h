@@ -1,12 +1,14 @@
 #pragma once
 
-#include <unordered_map>
 #include <filesystem>
+#include <unordered_map>
 #include <stdexcept>
+
 #include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Texture.hpp>
+
 #include "Assets.h"
 
 template <typename Resource, typename Identifier>

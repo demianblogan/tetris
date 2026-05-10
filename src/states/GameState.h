@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SFML/Graphics/Sprite.hpp>
+
 #include "../core/State.h"
 #include "../core/Context.h"
 #include "../game/Board.h"
@@ -7,8 +9,7 @@
 #include "../game/TetrominoBag.h"
 #include "../ui/Label.h"
 #include "../ui/Layout.h"
-#include <SFML/Graphics/Sprite.hpp>
-#include <ui/Panel.h>
+#include "../ui/Panel.h"
 
 class GameState : public State
 {
@@ -71,6 +72,7 @@ private:
 
 	[[nodiscard]] Tetromino GetGhostTetromino() const;
 	[[nodiscard]] Assets::TextureID GetBlockTextureID() const;
+
 public:
 	explicit GameState(Context& context);
 

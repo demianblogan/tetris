@@ -1,8 +1,9 @@
 #include "Layout.h"
 
 #include <algorithm>
+
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
 
 namespace UI
 {
@@ -71,9 +72,7 @@ namespace UI
 			for (const auto& child : children)
 			{
 				const sf::Vector2f size = child->Measure();
-
 				width += size.x;
-
 				height = std::max(height, size.y);
 			}
 
@@ -171,8 +170,6 @@ namespace UI
 		{
 			for (auto& child : children)
 			{
-				const sf::Vector2f measured = child->Measure();
-
 				float childWidth = ResolveChildWidth(*child, availableWidth, fillWidth);
 				float childHeight = ResolveChildHeight(*child, availableHeight, fillHeight);
 
@@ -205,10 +202,7 @@ namespace UI
 		{
 			for (auto& child : children)
 			{
-				const sf::Vector2f measured = child->Measure();
-
 				float childWidth = ResolveChildWidth(*child, availableWidth, fillWidth);
-
 				float childHeight = ResolveChildHeight(*child, availableHeight, fillHeight);
 
 				sf::Vector2f childPosition = cursor;
@@ -265,8 +259,7 @@ namespace UI
 			return rule.value;
 
 		case SizeMode::Percent:
-			return availableHeight
-				* rule.value;
+			return availableHeight * rule.value;
 
 		case SizeMode::Fill:
 			return fillHeight;

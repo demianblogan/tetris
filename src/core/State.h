@@ -1,9 +1,8 @@
 #pragma once
 
-#include <SFML/Graphics/RenderTarget.hpp>
-
 namespace sf
 {
+    class RenderTarget;
     class RenderWindow;
 }
 
