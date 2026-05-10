@@ -191,5 +191,6 @@
     <None Include="assets\shaders\crt.frag" />
     <None Include="assets\shaders\blur.frag" />
     <None Include="assets\shaders\glow.frag" />
+    <None Include="libs\SFML\README.md" />
   </ItemGroup>
 </Project>

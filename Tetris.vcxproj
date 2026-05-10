@@ -205,6 +205,7 @@
     <None Include="assets\shaders\crt.frag" />
     <None Include="assets\shaders\ghost_tetromino.frag" />
     <None Include="assets\shaders\glow.frag" />
+    <None Include="libs\SFML\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
